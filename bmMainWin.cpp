@@ -14,25 +14,30 @@ bmMainWin::bmMainWin(QWidget *parent)
     vbox->addWidget(labelHeartRate);
     setLayout(vbox);
     
-    //bmReader bm;
-
-    //connect( &bm, &bmReader::serialPortErro, this, &bmMainWin::logErro );
-    //connect( &bm, &bmReader::bmDataGot, this, &bmMainWin::logbmData );
-    
-    //bm.start();
 }
 void bmMainWin::logErro(const QString &s){
     labelBmID->setText(s);
-    //QTextStream out(stdout);
-    //out << QString(" 串口错误: %1").arg(s) << Qt::endl;
 }
 void bmMainWin::logbmData(const QString &bmID, const int Breathe, const int HeartRate){
     labelBmID->setText(QString(" 设备: %1").arg(bmID));
     labelBreathe->setText(QString(" 呼吸: %1").arg(Breathe));
     labelHeartRate->setText(QString(" 心跳: %1").arg(HeartRate));
-    
-    //QTextStream out(stdout);
-    //out << QString(" 设备: %1").arg(bmID) << Qt::endl;
-    //out << QString(" 呼吸: %1").arg(Breathe) << Qt::endl;
-    //out << QString(" 心跳: %1").arg(HeartRate) << Qt::endl;
 }
+
+void bmMainWin::showEvent(QShowEvent *event){
+    
+    bm = new bmReader();
+
+    connect( bm, &bmReader::serialPortErro, this, &bmMainWin::logErro );
+    connect( bm, &bmReader::bmDataGot, this, &bmMainWin::logbmData );
+    
+    bm->start();
+}
+
+void bmMainWin::closeEvent(QCloseEvent *event){
+    if (bm != 0 && bm->isRunning() ) {
+        bm->requestInterruption();
+        bm->wait();
+    }
+}
+

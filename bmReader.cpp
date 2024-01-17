@@ -6,7 +6,6 @@
 
 void bmReader::run() {
     const auto serialPortInfos = QSerialPortInfo::availablePorts();
-    //const QSerialPortInfo &portInfo = serialPortInfos[0];  
     
     QSerialPort serial;
     
@@ -33,13 +32,10 @@ void bmReader::run() {
     serial.setParity(QSerialPort::NoParity);
     serial.setFlowControl(QSerialPort::NoFlowControl);
     
-    //int i=0;
-    while(1){
-    	//emit serialPortErro(QString("准备读取……"));
+    while(!this->isInterruptionRequested()){
  	serial.waitForReadyRead(); //must
     	QByteArray readBytes=serial.readAll();//read(16);
    	
- 	//out << QString(" 字节数: %1").arg(readBytes.size()) << Qt::endl;
 	if(!readBytes.isEmpty()){	
 		emit bmDataGot(
 			getBmID(readBytes),
@@ -49,7 +45,6 @@ void bmReader::run() {
 	}
 	else{
 	    emit serialPortErro(QString("接收失败：%1").arg(serial.errorString()));
-	    //out << QString("接收失败：%1").arg(serial.errorString()) << "\n";
 	}
 	QThread::sleep(1);  
     }

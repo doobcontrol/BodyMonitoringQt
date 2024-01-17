@@ -2,9 +2,11 @@
 
 #include <QWidget>
 #include <QLabel>
+#include "bmReader.h"
 
 class bmMainWin : public QWidget {
-
+    void showEvent(QShowEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
 public:
     bmMainWin(QWidget *parent = nullptr);
 
@@ -12,6 +14,7 @@ private:
     QLabel *labelBreathe;
     QLabel *labelHeartRate;
     QLabel *labelBmID;
+    bmReader *bm;
     
 public slots:
     void logErro(const QString &s);
