@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#查找用户桌面目录
+#echo "USER:$USER"
+#echo "SUDO_USER:$SUDO_USER"
+rUser=${SUDO_USER:-$USER}
+
+USER_HOME=$(getent passwd $rUser | cut -d: -f6)
+#echo "userhome:$USER_HOME"
+
+#echo "XDG_CONFIG_HOME:$XDG_CONFIG_HOME"
+user_dirs_file=${XDG_CONFIG_HOME:-$USER_HOME/.config}/user-dirs.dirs
+#echo "user_dirs_file:$user_dirs_file"
+
+temphome=$HOME
+HOME=$USER_HOME
+#echo "HOME:$HOME"
+
+[[ -s $user_dirs_file ]] && . "$user_dirs_file"
+
+#echo "XDG_DESKTOP_DIR:$XDG_DESKTOP_DIR"
+tDeskTopPath=$(printf '%s\n' "${XDG_DESKTOP_DIR:-$USER_HOME/Desktop}")
+HOME=$temphome
+#echo "HOME:$HOME"
+echo "tDeskTopPath:$tDeskTopPath"
+
+#建立用户桌面快捷方式
+cp /usr/share/applications/BodyMonitoringQt.desktop $tDeskTopPath/
+chmod a+x $tDeskTopPath/BodyMonitoringQt.desktop
+
