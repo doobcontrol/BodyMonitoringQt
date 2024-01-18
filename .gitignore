@@ -57,3 +57,6 @@ compile_commands.json
 
 # every Exec file
 BodyMonitoringQt
+
+# dpkg file
+*.deb
