@@ -4,6 +4,8 @@
 bmMainWin::bmMainWin(QWidget *parent)
     : QWidget(parent) {
     
+    resize(400, 100);
+    
     labelBmID = new QLabel(" 设备: ", this);
     labelBreathe = new QLabel(" 呼吸: ", this);
     labelHeartRate = new QLabel(" 心跳: ", this);
@@ -12,6 +14,7 @@ bmMainWin::bmMainWin(QWidget *parent)
     vbox->addWidget(labelBmID);
     vbox->addWidget(labelBreathe);
     vbox->addWidget(labelHeartRate);
+    vbox->addStretch(1);
     setLayout(vbox);
     
 }
@@ -32,6 +35,7 @@ void bmMainWin::showEvent(QShowEvent *event){
     connect( bm, &bmReader::bmDataGot, this, &bmMainWin::logbmData );
     
     bm->start();
+    QWidget::showEvent(event);
 }
 
 void bmMainWin::closeEvent(QCloseEvent *event){
@@ -39,5 +43,6 @@ void bmMainWin::closeEvent(QCloseEvent *event){
         bm->requestInterruption();
         bm->wait();
     }
+    QWidget::closeEvent(event);
 }
 
