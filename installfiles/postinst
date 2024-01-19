@@ -26,9 +26,10 @@ echo "tDeskTopPath:$tDeskTopPath"
 
 #建立用户桌面快捷方式
 cp /usr/share/applications/BodyMonitoringQt.desktop $tDeskTopPath/
-chown $rUser:$rUser $tDeskTopPath/BodyMonitoringQt.desktop
+chown $rUser:$rUser $tDeskTopPath/BodyMonitoringQt.desktop metadata::trusted true  
 chmod a+x $tDeskTopPath/BodyMonitoringQt.desktop
-gio set $tDeskTopPath/BodyMonitoringQt.desktop metadata::trusted yes
 
 #把当前用户加入可操作串口的组
 gpasswd --add $rUser dialout
+
+exit 0
