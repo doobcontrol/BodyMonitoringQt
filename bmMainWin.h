@@ -1,10 +1,10 @@
 #pragma once
-
+#include <QMainWindow>
 #include <QWidget>
 #include <QLabel>
 #include "bmReader.h"
 
-class bmMainWin : public QWidget {
+class bmMainWin : public QMainWindow  {
     void showEvent(QShowEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
 public:
