@@ -13,7 +13,7 @@ public:
 
 private:
     bmReader *bm;
-    bmDataShow *bds;
+    bmDataShow *bds = nullptr;
     QVBoxLayout *vbox;
     QWidget *mainWidget;
 public slots:

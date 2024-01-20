@@ -6,6 +6,7 @@ class bmReader : public QThread
     void run() override;
     QString charToHexStr(char chr);
     QString getBmID(const QByteArray &bmDataPkg);
+    bool checkPkgValid(const QByteArray &bmDataPkg);
 public:
 
 signals:

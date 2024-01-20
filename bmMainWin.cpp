@@ -2,6 +2,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <exception>
 #include "bmMainWin.h"
 
 bmMainWin::bmMainWin(QWidget *parent)
@@ -21,10 +22,6 @@ bmMainWin::bmMainWin(QWidget *parent)
     mainWidget = new QWidget(this);
     
     vbox = new QVBoxLayout();
-        bds=new bmDataShow(mainWidget);
-        //bds->bmID=bmID;
-        vbox->addWidget(bds,1);
-    
     mainWidget->setLayout(vbox);
     setCentralWidget(mainWidget);
 }
@@ -33,18 +30,17 @@ void bmMainWin::logErro(const QString &s){
 }
 void bmMainWin::logbmData(const QString &bmID, const int Breathe, const int HeartRate){
     //此处加列表，以处理不同设备ID号？？
-    if(bds==0){
+    if(bds == nullptr){
+    	statusBar()->showMessage(QString("设备 %1 已连接").arg(bmID));
         bds=new bmDataShow(mainWidget);
         bds->bmID=bmID;
         vbox->addWidget(bds,1);
     }
-    bds->bmID=bmID;
 
     bds->addBmData(Breathe, HeartRate);
 }
 
-void bmMainWin::showEvent(QShowEvent *event){
-    
+void bmMainWin::showEvent(QShowEvent *event){    
     bm = new bmReader();
 
     connect( bm, &bmReader::serialPortErro, this, &bmMainWin::logErro );

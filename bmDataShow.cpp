@@ -47,7 +47,6 @@ bmDataShow::bmDataShow(QWidget *parent)
             
     auto *hbox = new QHBoxLayout(this);
     hbox->addWidget(chartView, 0);
-    //resize(400, 600);
 }
 void bmDataShow::addBmData(const int Breathe, const int HeartRate){
     
@@ -68,5 +67,5 @@ void bmDataShow::addBmData(const int Breathe, const int HeartRate){
     seriesBreathe->append(tTime.toMSecsSinceEpoch(), Breathe);
     seriesHeartRate->append(tTime.toMSecsSinceEpoch(), HeartRate);
     
-    chart->setTitle(QString("设备: %1; 呼吸: %2; 心跳: %3").arg(bmID).arg(Breathe).arg(HeartRate));
+    chart->setTitle(QString("设备: %1  －  呼吸: %2  －  心跳: %3").arg(bmID).arg(Breathe).arg(HeartRate));
 }
