@@ -25,6 +25,7 @@ bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     axisX->setMax(tTime);
     
     axisY = new QValueAxis;
+    axisY->setTickCount(12);
     axisY->setLabelFormat("%i");
     axisY->setTitleText("指标");
     chart->addAxis(axisY, Qt::AlignLeft);
