@@ -2,7 +2,6 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
-#include <exception>
 #include "bmMainWin.h"
 
 bmMainWin::bmMainWin(QWidget *parent)
@@ -32,8 +31,7 @@ void bmMainWin::logbmData(const QString &bmID, const int Breathe, const int Hear
     //此处加列表，以处理不同设备ID号？？
     if(bds == nullptr){
     	statusBar()->showMessage(QString("设备 %1 已连接").arg(bmID));
-        bds=new bmDataShow(mainWidget);
-        bds->bmID=bmID;
+        bds=new bmDataShow(bmID, mainWidget);
         vbox->addWidget(bds,1);
     }
 

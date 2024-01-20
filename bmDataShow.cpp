@@ -1,9 +1,9 @@
 
 #include "bmDataShow.h"
 
-bmDataShow::bmDataShow(QWidget *parent)
+bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     : QWidget(parent) {
-    
+    this->bmID=bmID;
     seriesBreathe = new QLineSeries();
     seriesHeartRate = new QLineSeries();
     

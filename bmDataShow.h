@@ -10,9 +10,9 @@ class bmDataShow : public QWidget  {
     QChart *chart;
     QDateTimeAxis *axisX;
     QValueAxis *axisY;
-public:
     QString bmID;
-    bmDataShow(QWidget *parent = nullptr);
+public:
+    bmDataShow(QString bmID, QWidget *parent = nullptr);
     void addBmData(const int Breathe, const int HeartRate);
 private:
     QChartView qChartView;
