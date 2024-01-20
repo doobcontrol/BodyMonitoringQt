@@ -7,7 +7,7 @@
 bmMainWin::bmMainWin(QWidget *parent)
     : QMainWindow(parent) {
     
-    resize(500, 200);
+    resize(800, 500);
     auto *quit = new QAction("退出", this);
     menuBar()->addMenu("人员管理");
     menuBar()->addMenu("设备管理");
@@ -17,19 +17,14 @@ bmMainWin::bmMainWin(QWidget *parent)
     exitMenu->addAction(quit);
     
     connect(quit, &QAction::triggered, this, &QMainWindow::close);
-    
-    labelBmID = new QLabel(" 设备: ", this);
-    labelBreathe = new QLabel(" 呼吸: ", this);
-    labelHeartRate = new QLabel(" 心跳: ", this);
 
-    auto *vbox = new QVBoxLayout();
-    vbox->addWidget(labelBmID);
-    vbox->addWidget(labelBreathe);
-    vbox->addWidget(labelHeartRate);
-    vbox->addStretch(1);
+    mainWidget = new QWidget(this);
     
-    QWidget *mainWidget;
-    mainWidget = new QWidget();
+    vbox = new QVBoxLayout();
+        bds=new bmDataShow(mainWidget);
+        //bds->bmID=bmID;
+        vbox->addWidget(bds,1);
+    
     mainWidget->setLayout(vbox);
     setCentralWidget(mainWidget);
 }
@@ -37,9 +32,15 @@ void bmMainWin::logErro(const QString &s){
     statusBar()->showMessage(s);
 }
 void bmMainWin::logbmData(const QString &bmID, const int Breathe, const int HeartRate){
-    labelBmID->setText(QString(" 设备: %1").arg(bmID));
-    labelBreathe->setText(QString(" 呼吸: %1").arg(Breathe));
-    labelHeartRate->setText(QString(" 心跳: %1").arg(HeartRate));
+    //此处加列表，以处理不同设备ID号？？
+    if(bds==0){
+        bds=new bmDataShow(mainWidget);
+        bds->bmID=bmID;
+        vbox->addWidget(bds,1);
+    }
+    bds->bmID=bmID;
+
+    bds->addBmData(Breathe, HeartRate);
 }
 
 void bmMainWin::showEvent(QShowEvent *event){

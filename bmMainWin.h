@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QLabel>
 #include "bmReader.h"
+#include "bmDataShow.h"
 
 class bmMainWin : public QMainWindow  {
     void showEvent(QShowEvent *event) override;
@@ -11,11 +12,10 @@ public:
     bmMainWin(QWidget *parent = nullptr);
 
 private:
-    QLabel *labelBreathe;
-    QLabel *labelHeartRate;
-    QLabel *labelBmID;
     bmReader *bm;
-    
+    bmDataShow *bds;
+    QVBoxLayout *vbox;
+    QWidget *mainWidget;
 public slots:
     void logErro(const QString &s);
     void logbmData(const QString &bmID, const int Breathe, const int HeartRate);
