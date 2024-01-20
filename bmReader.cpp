@@ -3,12 +3,11 @@
 #include <QSerialPortInfo>
 
 #include "bmReader.h"
-
+bmReader::bmReader(QObject *parent): QThread(parent){}
 void bmReader::run() {
     const auto serialPortInfos = QSerialPortInfo::availablePorts();
     
     QSerialPort serial;
-    
     bool openSucceed=false;
     QString openErroStr("连接设备失败，请检查是否已正确连接！");
     for (const QSerialPortInfo &portInfo : serialPortInfos) {
@@ -23,6 +22,7 @@ void bmReader::run() {
     }
     if (!openSucceed) {
         emit serialPortErro(openErroStr);
+        emit finished();
         return;
     }   
     
@@ -32,6 +32,10 @@ void bmReader::run() {
     serial.setParity(QSerialPort::NoParity);
     serial.setFlowControl(QSerialPort::NoFlowControl);
     
+    serial.setDataTerminalReady(true);
+    serial.clear();
+    
+    QThread::sleep(1); 
     while(!this->isInterruptionRequested()){
  	serial.waitForReadyRead(); //must
     	QByteArray readBytes=serial.readAll();//read(16);
@@ -50,8 +54,9 @@ void bmReader::run() {
 	}
 	else{
 	    emit serialPortErro(QString("接收失败：%1").arg(serial.errorString()));
+	    break;
 	}
-	QThread::sleep(1);  
+	//QThread::sleep(1);  
     }
    
     serial.close();

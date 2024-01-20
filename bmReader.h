@@ -8,7 +8,7 @@ class bmReader : public QThread
     QString getBmID(const QByteArray &bmDataPkg);
     bool checkPkgValid(const QByteArray &bmDataPkg);
 public:
-
+    bmReader(QObject *parent = nullptr);
 signals:
     void serialPortErro(const QString &s);
     void bmDataGot(const QString &bmID, const int Breathe, const int HeartRate);

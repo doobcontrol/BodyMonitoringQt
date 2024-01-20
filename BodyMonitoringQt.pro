@@ -18,3 +18,4 @@ HEADERS += bmDataShow.h bmMainWin.h bmReader.h
 SOURCES += bmDataShow.cpp bmMainWin.cpp bmReader.cpp main.cpp
 
 QT += widgets serialport charts
+RESOURCES     = resource.qrc

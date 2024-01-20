@@ -1,0 +1,9 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file alias="Exit.png">images/Exit.png</file>
+    <file alias="Main.png">images/Main.png</file>
+    <file alias="Start.png">images/Start.png</file>
+    <file alias="Loading.png">images/Loading.png</file>
+    <file alias="Stop.png">images/Stop.png</file>
+</qresource>
+</RCC>
