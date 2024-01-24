@@ -60,3 +60,4 @@ BodyMonitoringQt
 
 # dpkg file
 *.deb
+*.db
