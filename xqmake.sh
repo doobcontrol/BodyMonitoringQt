@@ -2,6 +2,8 @@
 
 # Author : dooacontrol
 
+rm -f qrc_resource.cpp
+
 echo "reQmake project:"
 qmake -project
 echo "reQmake project done "
@@ -16,3 +18,5 @@ QT += widgets
 QT += serialport 
 QT += charts
 QT += sql" >> BodyMonitoringQt.pro
+
+qmake
