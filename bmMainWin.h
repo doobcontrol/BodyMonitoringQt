@@ -30,5 +30,6 @@ public slots:
     void changeStartStatus();
     void loadMovieFrameChanged_Handler(int frameNumber);
     void bmStop();
+    void openEquManage();
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(bmMainWin::startBmStatus)

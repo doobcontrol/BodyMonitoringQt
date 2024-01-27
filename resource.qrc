@@ -5,5 +5,9 @@
     <file alias="Start.png">images/Start.png</file>
     <file alias="Loading.png">images/Loading.png</file>
     <file alias="Stop.png">images/Stop.png</file>
+    <file alias="New.png">images/New.png</file>
+    <file alias="Edit.png">images/Edit.png</file>
+    <file alias="Delete.png">images/Delete.png</file>
+    <file alias="House.png">images/House.png</file>
 </qresource>
 </RCC>

@@ -22,13 +22,19 @@ private:
 
 //实例成员
 public:   
+    QList<QMap<QString, QString>> FieldsList;   
     void createTable(); 
+    
+    //查询
+    QList<QMap<QString, QString>>* selectAll(); 
+       
+    //新增
+    void insertOne(const QMap<QString, QString>& recordMap);
     
 protected:
     XyBaseModel();
     QString tableCode;   //表物理名（数据库操作名）
     virtual void createFieldsList();
-    QList<QMap<QString, QString>> FieldsLis;
     void addAField(
         const QString& fFieldName,
         const QString& fFieldCode,

@@ -3,19 +3,26 @@
 #include <QMenuBar>
 #include <QStatusBar>
 #include "bmMainWin.h"
+#include "EquManageWin.h"
 
 bmMainWin::bmMainWin(QWidget *parent)
     : QMainWindow(parent) {
     setWindowIcon(QIcon(":/Main.png"));//只对windows有效，在linux下无效
     resize(800, 500);
-    auto *quit = new QAction(QIcon(":/Exit.png"),"退出", this);
+    
     menuBar()->addMenu("人员管理");
-    menuBar()->addMenu("设备管理");
+    
+    QMenu *exitMenu = menuBar()->addMenu("设备管理");
+    auto *quit = new QAction(QIcon(":/House.png"),"设备管理", this);
+    exitMenu->addAction(quit);
+    connect(quit, &QAction::triggered, this, &bmMainWin::openEquManage);
+    
     menuBar()->addMenu("系统管理");
     menuBar()->addMenu("查询统计");
-    QMenu *exitMenu = menuBar()->addMenu("退出");
-    exitMenu->addAction(quit);
     
+    exitMenu = menuBar()->addMenu("退出");
+    quit = new QAction(QIcon(":/Exit.png"),"退出", this);
+    exitMenu->addAction(quit);
     connect(quit, &QAction::triggered, this, &QMainWindow::close);
     
     QToolBar *toolbar = addToolBar("main toolbar");
@@ -121,5 +128,9 @@ void bmMainWin::bmStartStatus(startBmStatus targetStatus){
 	startBm->setToolTip(QString("正在停止……"));
     }
     m_startBmStatus=targetStatus; 
+}
+void bmMainWin::openEquManage(){
+    EquManageWin *emw=new EquManageWin(this);    
+    emw->show();
 }
 
