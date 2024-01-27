@@ -25,7 +25,7 @@ int xyTableModel::columnCount(const QModelIndex & /*parent*/) const
 
 QVariant xyTableModel::data(const QModelIndex &index, int role) const
 {
-    if (role == Qt::DisplayRole){            
+    if (role == Qt::DisplayRole || role == Qt::EditRole){            
         return RowList->value(index.row())
             [FieldsList->value(index.column())[XyModel::XyBaseModel::FieldCode]];
     }
