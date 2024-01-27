@@ -29,7 +29,10 @@ EquManageWin::EquManageWin(QWidget *parent)
     //mainWidget->setLayout(vbox);
     //setCentralWidget(mainWidget);
     
-    model = new xyTableModel;
+    model = new xyTableModel(
+        Equ::get()->selectAll(), 
+        &Equ::get()->FieldsList, 
+        this);
     
     tableView = new QTableView;         
     //vbox->addWidget(tableView, 0);
@@ -43,6 +46,6 @@ void EquManageWin::AddEqu(){
     QString newRecordID = Equ::get()->newRecord();
     model->addRows(*Equ::get()->selectByPk(newRecordID));
 }
-void EquManageWin::UpdateEqu(const int & row, const int & column, const QString &  value){
-    Equ::get()->updateOneFieldByPk(model->getPk(row),model->getFieldCode(column),value);
+void EquManageWin::UpdateEqu(const QMap<QString, QString> recordMap, const QMap<QString, QString> fieldMap){
+    Equ::get()->updateByRowColumn(recordMap,fieldMap);
 }

@@ -1,6 +1,5 @@
 #pragma once
 #include <QAbstractTableModel>
-#include "Equ.h"
 
 class xyTableModel : public QAbstractTableModel
 {
@@ -8,7 +7,10 @@ class xyTableModel : public QAbstractTableModel
     QList<QMap<QString, QString>>* RowList = nullptr;
     QList<QMap<QString, QString>>* FieldsList = nullptr;
 public:
-    explicit xyTableModel(QObject *parent = nullptr);
+    explicit xyTableModel(
+        QList<QMap<QString, QString>>* RowList, 
+        QList<QMap<QString, QString>>* FieldsList, 
+        QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -23,5 +25,5 @@ public:
     QString getPk(const int & row);
     QString getFieldCode(const int & column);
 signals:
-    void editCompleted(const int & row, const int & column, const QString &);
+    void editCompleted(const QMap<QString, QString> recordMap, const QMap<QString, QString> fieldMap);
 };

@@ -1,11 +1,15 @@
 #include "xyTableModel.h"
+#include "XyKModel.h"
 #include <QDebug>
 
-xyTableModel::xyTableModel(QObject *parent)
+xyTableModel::xyTableModel(
+    QList<QMap<QString, QString>>* RowList, 
+    QList<QMap<QString, QString>>* FieldsList,
+    QObject *parent)
     : QAbstractTableModel(parent)
 {
-    RowList = Equ::get()->selectAll();
-    FieldsList = &Equ::get()->FieldsList;
+    this->RowList = RowList;
+    this->FieldsList = FieldsList;
 }
 
 int xyTableModel::rowCount(const QModelIndex & /*parent*/) const
@@ -42,7 +46,6 @@ bool xyTableModel::insertRows(int row, int count, const QModelIndex & parent)
     return true;
 }
 void xyTableModel::addRows(QMap<QString, QString> rowMap){
-       qDebug() << rowMap[Equ::fID];
     beginInsertRows(QModelIndex(), 0, 0);
     RowList->insert(0, rowMap); //rowCount()
     endInsertRows();
@@ -64,10 +67,12 @@ bool xyTableModel::setData(const QModelIndex &index, const QVariant &value, int 
         
         if(value.toString()!=RowList->value(index.row())
             [FieldsList->value(index.column())[XyModel::XyBaseModel::FieldCode]]
-            ){
-            emit editCompleted(index.row(), index.column(), value.toString());
+            )
+        {
             (*RowList)[index.row()] //
                 [FieldsList->value(index.column())[XyModel::XyBaseModel::FieldCode]]=value.toString();
+            emit editCompleted(RowList->value(index.row()), FieldsList->value(index.column()));
+            
             emit dataChanged(index,index);
         }
         else{
@@ -81,13 +86,4 @@ bool xyTableModel::setData(const QModelIndex &index, const QVariant &value, int 
 Qt::ItemFlags xyTableModel::flags(const QModelIndex &index) const
 {
     return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
-}
-    
-QString xyTableModel::getPk(const int & row)
-{
-    return RowList->value(row)[XyModel::XyKModel::fID];
-}
-QString xyTableModel::getFieldCode(const int & column)
-{
-    return FieldsList->value(column)[XyModel::XyBaseModel::FieldCode];
 }

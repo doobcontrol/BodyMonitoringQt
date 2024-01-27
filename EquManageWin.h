@@ -11,5 +11,5 @@ private:
 
 public slots:
     void AddEqu();
-    void UpdateEqu(const int & row, const int & column, const QString & value);
+    void UpdateEqu(QMap<QString, QString> recordMap, QMap<QString, QString> fieldMap);
 };

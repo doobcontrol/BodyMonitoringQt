@@ -107,7 +107,7 @@ void XyBaseModel::insertOne(const QMap<QString, QString>& recordMap){
    if(query.exec())
    {
        //success = true;
-       qDebug() << "insertOne" << sqlStr;
+       //qDebug() << "insertOne" << sqlStr;
    }
    else
    {

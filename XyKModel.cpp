@@ -40,8 +40,8 @@ QString XyKModel::newRecord(const QString& pk){
     insertOne(recordMap);
     return pk;
 }
-void XyKModel::updateOneFieldByPk(const QString& pk, const QString& fieldName, const QString& fieldValue){ //slot
-   QString setStr(QString("%1 = '%2'").arg(fieldName).arg(fieldValue));
+void XyKModel::updateOneFieldByPk(const QString& pk, const QString& fieldCode, const QString& fieldValue){ //slot
+   QString setStr(QString("%1 = '%2'").arg(fieldCode).arg(fieldValue));
    QString whereStr(QString("%1 = '%2'").arg(fID).arg(pk));
    QString sqlStr=QString("UPDATE %1 SET %2 WHERE %3").arg(tableCode).arg(setStr).arg(whereStr);
    
@@ -59,4 +59,10 @@ void XyKModel::updateOneFieldByPk(const QString& pk, const QString& fieldName, c
        //qDebug() << "insertOne error:"
        //         << query.lastError()
    }
+}
+void XyKModel::updateByRowColumn(const QMap<QString, QString> recordMap, const QMap<QString, QString> fieldMap){
+    QString pk=recordMap[fID]; 
+    QString fieldCode=fieldMap[FieldCode]; 
+    QString fieldValue=recordMap[fieldCode];
+    updateOneFieldByPk(pk, fieldCode, fieldValue);
 }
