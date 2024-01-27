@@ -1,13 +1,11 @@
 #include <QDebug>
 #include <QFile>
-#include "XyBaseModel.h"
-#include "XyKModel.h"
-#include "Equ.h"
 #include "dbHelper.h"
 #include <QSqlError>
 
 using namespace XyModel;
 
+QList<XyModel::XyBaseModel*> dbHelper::initXyBaseModelList;
 QSqlDatabase dbHelper::m_db;
 QString dbHelper::m_dbType="QSQLITE";
 QString dbHelper::m_dbFile="bm.db";
@@ -31,22 +29,63 @@ void dbHelper::init(){
         qDebug() << "Database: connection ok";
     }
     
-    if(isNewDbFile){
-    	//生成数据表
-    	XyBaseModel* bmodel=Equ::get();
-    	
-    	bmodel->createTable();
+    if(isNewDbFile){    
+    	//生成数据表    
+        for(XyBaseModel* pModel:initXyBaseModelList){       
+    	    pModel->createTable();
+        }
     }
 }
 void dbHelper::queryNoReturn(const QString& sqlStr){
     QSqlQuery query;
-    if (query.exec(sqlStr))
+    query.prepare(sqlStr);
+    if(query.exec())
     {
-        qDebug() << QString("create table ok: %1").arg(sqlStr);
+        //success = true;
+       //qDebug() << "insertOne" << sqlStr;
     }
     else
     {
-        qDebug() << "create table Error: " + query.lastError().text();
-        qDebug() << QString("Erro sql String: %1").arg(sqlStr);
+        qDebug() << sqlStr;
+        qDebug() << "error:"
+                 << query.lastError();
     }
+}
+QMap<QString, QString>* dbHelper::queryRecord(
+    const QString& sqlStr, 
+    const QList<QMap<QString, QString>>& FieldsList)
+{
+    QSqlQuery query(sqlStr);
+    QMap<QString, QString> *retQMap=new QMap<QString, QString>;
+    if(query.first())
+    {    
+        for(QMap<QString, QString> fQMap:FieldsList){           
+            retQMap->insert(fQMap[XyBaseModel::FieldCode], query.value(fQMap[XyBaseModel::FieldCode]).toString());
+        }
+    }
+    else
+    {
+        qDebug() << sqlStr;
+        qDebug() << "error:"
+                << query.lastError();
+    }
+    return retQMap;
+}
+QList<QMap<QString, QString>>* dbHelper::queryRecords(
+    const QString& sqlStr, 
+    const QList<QMap<QString, QString>>& FieldsList)
+{
+    QSqlQuery query(sqlStr);
+    QList<QMap<QString, QString>>* retList=new QList<QMap<QString, QString>>;
+    while (query.next())
+    {    
+        QMap<QString, QString> tQMap;    
+         
+        for(QMap<QString, QString> fQMap:FieldsList){           
+            tQMap[fQMap[XyBaseModel::FieldCode]]=query.value(fQMap[XyBaseModel::FieldCode]).toString();
+        }
+    
+        retList->append(tQMap);
+    }
+    return retList;
 }

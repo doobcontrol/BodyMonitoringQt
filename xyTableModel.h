@@ -4,13 +4,13 @@
 class xyTableModel : public QAbstractTableModel
 {
     Q_OBJECT
-    QList<QMap<QString, QString>>* RowList = nullptr;
-    QList<QMap<QString, QString>>* FieldsList = nullptr;
 public:
     explicit xyTableModel(
         QList<QMap<QString, QString>>* RowList, 
         QList<QMap<QString, QString>>* FieldsList, 
         QObject *parent = nullptr);
+    QList<QMap<QString, QString>>* RowList = nullptr;
+    QList<QMap<QString, QString>>* FieldsList = nullptr;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;

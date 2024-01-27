@@ -1,7 +1,6 @@
 #pragma once
 #include <QList>
 #include <QMap>
-#include "dbHelper.h"
 
 namespace XyModel
 {

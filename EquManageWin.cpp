@@ -5,9 +5,8 @@
 #include <QTableView>
 #include "Equ.h"
 #include <QDebug>
-//#include <QFileSystemModel>
-//#include <QDir>
 #include "EquManageWin.h"
+#include <QMessageBox>
 
 EquManageWin::EquManageWin(QWidget *parent)
 : QMainWindow(parent){
@@ -21,7 +20,8 @@ EquManageWin::EquManageWin(QWidget *parent)
     tAction = toolbar->addAction(QIcon(":/New.png"), "新增");
     connect(tAction, &QAction::triggered, this, &EquManageWin::AddEqu);
     toolbar->addAction(QIcon(":/Edit.png"), "修改");
-    toolbar->addAction(QIcon(":/Delete.png"), "删除");
+    tAction = toolbar->addAction(QIcon(":/Delete.png"), "删除");
+    connect(tAction, &QAction::triggered, this, &EquManageWin::DeleteEqu);
     this->setWindowModality(Qt::ApplicationModal);   
     
     //QWidget *mainWidget = new QWidget(this);    
@@ -34,7 +34,9 @@ EquManageWin::EquManageWin(QWidget *parent)
         &Equ::get()->FieldsList, 
         this);
     
-    tableView = new QTableView;         
+    tableView = new QTableView;    
+    tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     //vbox->addWidget(tableView, 0);
     setCentralWidget(tableView);
     
@@ -45,6 +47,29 @@ EquManageWin::EquManageWin(QWidget *parent)
 void EquManageWin::AddEqu(){
     QString newRecordID = Equ::get()->newRecord();
     model->addRows(*Equ::get()->selectByPk(newRecordID));
+}
+void EquManageWin::DeleteEqu(){
+    QList<QModelIndex> selectedRowsList = tableView->selectionModel()->selectedRows();
+    if(selectedRowsList.count()==0){
+        QMessageBox::critical(this, QString("出错"), QString("请选择要删除的项"));
+        return;
+    }
+    int rowInt=selectedRowsList[0].row();
+    QMap<QString, QString> rowMap = (*(model->RowList))[rowInt];
+    
+    //删除确认
+    QMessageBox::StandardButton retButton = QMessageBox::question(this, 
+        QString("删除确认"), 
+        QString("确定要删除房间：%1 吗?").arg(rowMap[Equ::fEquRoom]), 
+        QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No), 
+        QMessageBox::NoButton);
+    if(retButton!=QMessageBox::Yes){
+        return;
+    }
+    
+    Equ::get()->deleteByRow(rowMap);
+    model->RowList->removeAt(rowInt);
+    model->removeRows(rowInt, 1);
 }
 void EquManageWin::UpdateEqu(const QMap<QString, QString> recordMap, const QMap<QString, QString> fieldMap){
     Equ::get()->updateByRowColumn(recordMap,fieldMap);

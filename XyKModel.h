@@ -23,6 +23,10 @@ public:
     void updateOneFieldByPk(const QString& pk, const QString& fieldName, const QString& fieldValue);
     void updateByRowColumn(QMap<QString, QString> recordMap, QMap<QString, QString> fieldMap);
     
+    //删除
+    void deleteByPk(const QString& pk);
+    void deleteByRow(const QMap<QString, QString> recordMap);
+    
 protected:
     XyKModel(); 
     virtual void createFieldsList();

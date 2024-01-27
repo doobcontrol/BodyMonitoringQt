@@ -2,10 +2,12 @@
 #include <QTextStream>
 #include "bmMainWin.h"
 #include "dbHelper.h"
+#include "Equ.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
+    dbHelper::initXyBaseModelList.append(Equ::get());
     dbHelper::init();
     
     bmMainWin window;

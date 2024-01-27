@@ -74,19 +74,8 @@ void XyBaseModel::createTable(){
 }
 
 QList<QMap<QString, QString>>* XyBaseModel::selectAll(){
-    QSqlQuery query(QString("SELECT * FROM %1").arg(tableCode));
-    QList<QMap<QString, QString>>* retList=new QList<QMap<QString, QString>>;
-    while (query.next())
-    {    
-        QMap<QString, QString> tQMap;    
-         
-        for(QMap<QString, QString> fQMap:FieldsList){           
-            tQMap[fQMap[FieldCode]]=query.value(fQMap[FieldCode]).toString();
-        }
-    
-        retList->append(tQMap);
-    }
-    return retList;
+    QString sqlStr = QString("SELECT * FROM %1").arg(tableCode);
+    return dbHelper::queryRecords(sqlStr, FieldsList);
 }
 
 void XyBaseModel::insertOne(const QMap<QString, QString>& recordMap){
@@ -102,18 +91,5 @@ void XyBaseModel::insertOne(const QMap<QString, QString>& recordMap){
    }
    QString sqlStr=QString("INSERT INTO %1 (%2) VALUES (%3)").arg(tableCode).arg(fieldsStr).arg(valuesStr);
    
-   QSqlQuery query;
-   query.prepare(sqlStr);
-   if(query.exec())
-   {
-       //success = true;
-       //qDebug() << "insertOne" << sqlStr;
-   }
-   else
-   {
-       qDebug() << "insertOne error:"
-       << sqlStr;
-       //qDebug() << "insertOne error:"
-       //         << query.lastError()
-   }
+   dbHelper::queryNoReturn(sqlStr);
 }

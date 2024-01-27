@@ -1,4 +1,5 @@
 #include "XyKModel.h"
+#include "dbHelper.h"
 #include <QDebug>
 #include <QUuid>
 #include <QSqlError>
@@ -15,19 +16,8 @@ void XyKModel::createFieldsList(){
     addAField("pkID",fID,DataType_text,"50","1");    
 }
 QMap<QString, QString>* XyKModel::selectByPk(const QString& pk){
-    QSqlQuery query(QString("SELECT * FROM %1 where %2='%3'").arg(tableCode).arg(fID).arg(pk));
-    QMap<QString, QString> *retQMap=new QMap<QString, QString>;
-    if(query.first())
-    {    
-        for(QMap<QString, QString> fQMap:FieldsList){           
-            retQMap->insert(fQMap[FieldCode], query.value(fQMap[FieldCode]).toString());
-        }
-    }
-    else{
-        qDebug() << "selectByPk error:"
-                 << query.lastError();
-    }
-    return retQMap;
+    QString sqlStr = QString("SELECT * FROM %1 where %2='%3'").arg(tableCode).arg(fID).arg(pk);
+    return dbHelper::queryRecord(sqlStr, FieldsList);
 }
 QString XyKModel::newRecord(){
     QString pk(QUuid::createUuid().toString(QUuid::Id128));
@@ -45,24 +35,21 @@ void XyKModel::updateOneFieldByPk(const QString& pk, const QString& fieldCode, c
    QString whereStr(QString("%1 = '%2'").arg(fID).arg(pk));
    QString sqlStr=QString("UPDATE %1 SET %2 WHERE %3").arg(tableCode).arg(setStr).arg(whereStr);
    
-   QSqlQuery query;
-   query.prepare(sqlStr);
-   if(query.exec())
-   {
-       //success = true;
-       //qDebug() << "update:" << sqlStr;
-   }
-   else
-   {
-       qDebug() << "update error:"
-       << sqlStr;
-       //qDebug() << "insertOne error:"
-       //         << query.lastError()
-   }
+   dbHelper::queryNoReturn(sqlStr);
 }
 void XyKModel::updateByRowColumn(const QMap<QString, QString> recordMap, const QMap<QString, QString> fieldMap){
     QString pk=recordMap[fID]; 
     QString fieldCode=fieldMap[FieldCode]; 
     QString fieldValue=recordMap[fieldCode];
     updateOneFieldByPk(pk, fieldCode, fieldValue);
+}
+
+//删除
+void XyKModel::deleteByPk(const QString& pk){
+    QString sqlStr=QString("DELETE FROM %1 WHERE %2 = '%3'").arg(tableCode).arg(fID).arg(pk);
+   
+    dbHelper::queryNoReturn(sqlStr);
+}
+void XyKModel::deleteByRow(const QMap<QString, QString> recordMap){
+    deleteByPk(recordMap[fID]);
 }

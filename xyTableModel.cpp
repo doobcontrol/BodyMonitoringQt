@@ -1,5 +1,6 @@
 #include "xyTableModel.h"
 #include "XyKModel.h"
+#include <QColor>
 #include <QDebug>
 
 xyTableModel::xyTableModel(
@@ -28,6 +29,10 @@ QVariant xyTableModel::data(const QModelIndex &index, int role) const
         return RowList->value(index.row())
             [FieldsList->value(index.column())[XyModel::XyBaseModel::FieldCode]];
     }
+    //else if(role == Qt::BackgroundRole){
+    //    QColor col1(0,255,255);
+    //    return col1;
+    //}
 
     return QVariant();
 }
@@ -55,7 +60,7 @@ bool xyTableModel::removeRows(int row, int count, const QModelIndex & parent)
 {   
     beginRemoveRows(parent, row, row+(count-1));
     
-    endRemoveColumns();
+    endRemoveRows();
     return true;
 }
 
