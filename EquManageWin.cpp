@@ -22,12 +22,7 @@ EquManageWin::EquManageWin(QWidget *parent)
     toolbar->addAction(QIcon(":/Edit.png"), "修改");
     tAction = toolbar->addAction(QIcon(":/Delete.png"), "删除");
     connect(tAction, &QAction::triggered, this, &EquManageWin::DeleteEqu);
-    this->setWindowModality(Qt::ApplicationModal);   
-    
-    //QWidget *mainWidget = new QWidget(this);    
-    //QVBoxLayout* vbox = new QVBoxLayout(this);
-    //mainWidget->setLayout(vbox);
-    //setCentralWidget(mainWidget);
+    this->setWindowModality(Qt::ApplicationModal); 
     
     QList<QString>* showFields=new QList<QString>;
     showFields->append(Equ::fEquRoom);
@@ -41,7 +36,6 @@ EquManageWin::EquManageWin(QWidget *parent)
     tableView = new QTableView;    
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableView->setSelectionMode(QAbstractItemView::SingleSelection);
-    //vbox->addWidget(tableView, 0);
     setCentralWidget(tableView);
     
     tableView->setModel(model);    
@@ -51,6 +45,10 @@ EquManageWin::EquManageWin(QWidget *parent)
 void EquManageWin::AddEqu(){
     QString newRecordID = Equ::get()->newRecord();
     model->addRows(*Equ::get()->selectByPk(newRecordID));
+    tableView->selectRow(0);
+    // Start editing the cell
+    tableView->setCurrentIndex(model->index(0,0));
+    tableView->edit(model->index(0,0));
 }
 void EquManageWin::DeleteEqu(){
     QList<QModelIndex> selectedRowsList = tableView->selectionModel()->selectedRows();
