@@ -8,9 +8,13 @@ public:
     explicit xyTableModel(
         QList<QMap<QString, QString>>* RowList, 
         QList<QMap<QString, QString>>* FieldsList, 
+        QList<QString>* showFields, 
         QObject *parent = nullptr);
     QList<QMap<QString, QString>>* RowList = nullptr;
     QList<QMap<QString, QString>>* FieldsList = nullptr;
+    
+    QList<QString>* showFields = nullptr;    
+    QMap<QString, QMap<QString, QString>>* showFieldMaps = nullptr;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;

@@ -29,9 +29,13 @@ EquManageWin::EquManageWin(QWidget *parent)
     //mainWidget->setLayout(vbox);
     //setCentralWidget(mainWidget);
     
+    QList<QString>* showFields=new QList<QString>;
+    showFields->append(Equ::fEquRoom);
+    showFields->append(Equ::fEquID);
     model = new xyTableModel(
         Equ::get()->selectAll(), 
         &Equ::get()->FieldsList, 
+        showFields,
         this);
     
     tableView = new QTableView;    

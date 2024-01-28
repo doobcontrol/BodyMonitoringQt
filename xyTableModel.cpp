@@ -6,11 +6,20 @@
 xyTableModel::xyTableModel(
     QList<QMap<QString, QString>>* RowList, 
     QList<QMap<QString, QString>>* FieldsList,
+    QList<QString>* showFields, 
     QObject *parent)
     : QAbstractTableModel(parent)
 {
     this->RowList = RowList;
     this->FieldsList = FieldsList;
+    this->showFields = showFields;
+    
+    showFieldMaps = new QMap<QString, QMap<QString, QString>>;
+    for(QMap<QString, QString> fMaps:(*FieldsList)){
+         if(showFields->contains(fMaps[XyModel::XyBaseModel::FieldCode])){
+             showFieldMaps->insert(fMaps[XyModel::XyBaseModel::FieldCode], fMaps);
+         }
+    }
 }
 
 int xyTableModel::rowCount(const QModelIndex & /*parent*/) const
@@ -20,27 +29,23 @@ int xyTableModel::rowCount(const QModelIndex & /*parent*/) const
 
 int xyTableModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return FieldsList->count();
+    return showFields->count();
 }
 
 QVariant xyTableModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole || role == Qt::EditRole){            
         return RowList->value(index.row())
-            [FieldsList->value(index.column())[XyModel::XyBaseModel::FieldCode]];
+            [(*showFields)[index.column()]];
     }
-    //else if(role == Qt::BackgroundRole){
-    //    QColor col1(0,255,255);
-    //    return col1;
-    //}
 
     return QVariant();
 }
 QVariant xyTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-    
-        return FieldsList->value(section)[XyModel::XyBaseModel::FieldName];
+        
+        return (*showFieldMaps)[(*showFields)[section]][XyModel::XyBaseModel::FieldName];
     }
     return QVariant();
 }
@@ -52,9 +57,8 @@ bool xyTableModel::insertRows(int row, int count, const QModelIndex & parent)
 }
 void xyTableModel::addRows(QMap<QString, QString> rowMap){
     beginInsertRows(QModelIndex(), 0, 0);
-    RowList->insert(0, rowMap); //rowCount()
+    RowList->insert(0, rowMap);
     endInsertRows();
-    //insertRows(0,1);
 }
 bool xyTableModel::removeRows(int row, int count, const QModelIndex & parent)
 {   
@@ -71,12 +75,12 @@ bool xyTableModel::setData(const QModelIndex &index, const QVariant &value, int 
             return false;
         
         if(value.toString()!=RowList->value(index.row())
-            [FieldsList->value(index.column())[XyModel::XyBaseModel::FieldCode]]
+            [(*showFields)[index.column()]]
             )
         {
             (*RowList)[index.row()] //
-                [FieldsList->value(index.column())[XyModel::XyBaseModel::FieldCode]]=value.toString();
-            emit editCompleted(RowList->value(index.row()), FieldsList->value(index.column()));
+                [(*showFields)[index.column()]]=value.toString();
+            emit editCompleted(RowList->value(index.row()), (*showFieldMaps)[(*showFields)[index.column()]]);
             
             emit dataChanged(index,index);
         }
