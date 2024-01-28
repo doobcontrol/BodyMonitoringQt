@@ -19,7 +19,8 @@ EquManageWin::EquManageWin(QWidget *parent)
     QToolBar *toolbar = addToolBar("main toolbar");
     tAction = toolbar->addAction(QIcon(":/New.png"), "新增");
     connect(tAction, &QAction::triggered, this, &EquManageWin::AddEqu);
-    toolbar->addAction(QIcon(":/Edit.png"), "修改");
+    tAction = toolbar->addAction(QIcon(":/Edit.png"), "修改");
+    connect(tAction, &QAction::triggered, this, &EquManageWin::EditEqu);
     tAction = toolbar->addAction(QIcon(":/Delete.png"), "删除");
     connect(tAction, &QAction::triggered, this, &EquManageWin::DeleteEqu);
     this->setWindowModality(Qt::ApplicationModal); 
@@ -49,6 +50,17 @@ void EquManageWin::AddEqu(){
     // Start editing the cell
     tableView->setCurrentIndex(model->index(0,0));
     tableView->edit(model->index(0,0));
+}
+
+void EquManageWin::EditEqu(){    
+    QList<QModelIndex> selectedRowsList = tableView->selectionModel()->selectedRows();
+    if(selectedRowsList.count()==0){
+        QMessageBox::critical(this, QString("出错"), QString("请选择要修改的项"));
+        return;
+    }
+    int rowInt=selectedRowsList[0].row();
+    tableView->setCurrentIndex(model->index(rowInt,0));
+    tableView->edit(model->index(rowInt,0));
 }
 void EquManageWin::DeleteEqu(){
     QList<QModelIndex> selectedRowsList = tableView->selectionModel()->selectedRows();

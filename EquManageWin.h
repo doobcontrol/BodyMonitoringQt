@@ -11,6 +11,7 @@ private:
 
 public slots:
     void AddEqu();
+    void EditEqu();
     void DeleteEqu();
     void UpdateEqu(QMap<QString, QString> recordMap, QMap<QString, QString> fieldMap);
 };
