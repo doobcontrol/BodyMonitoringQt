@@ -20,9 +20,9 @@ ssh-keygen 生成ssh key pair
 拷贝id_rsa.pub内容在github内生成SSH key  
 git remote add origin git@github.com:doobcontrol/BodyMonitoringQt.git
 
-备忘：
-1，在Mint上安装后运行出错：
-./BodyMonitoringQt: error while loading shared libraries: libQt5Charts.so.5: cannot open shared object file: No such file or directory
-手动安装libQt5Charts：
-sudo apt install libqt5charts5  （在开发机上应安装  sudo apt install libqt5charts5-dev）
-应在安装程序中实现检查此包是否存在，不存在则安装的功能？？
+备忘：  
+1，在Mint上安装后运行出错：  
+./BodyMonitoringQt: error while loading shared libraries: libQt5Charts.so.5: cannot open shared object file: No such file or directory  
+手动安装libQt5Charts：  
+sudo apt install libqt5charts5  （在开发机上应安装  sudo apt install libqt5charts5-dev）  
+应在安装程序中实现检查此包是否存在，不存在则安装的功能？？  
