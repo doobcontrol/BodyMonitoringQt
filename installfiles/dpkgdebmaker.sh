@@ -6,7 +6,8 @@ echo "dpkg deb make start:"
 
 mkdir -p BodyMonitoringQt-dpkg/usr/local/bin
 cp ../BodyMonitoringQt BodyMonitoringQt-dpkg/usr/local/bin
-cp ../BodyMonitoringQt.png BodyMonitoringQt-dpkg/usr/local/bin
+mkdir -p BodyMonitoringQt-dpkg/usr/local/share/BodyMonitoring
+cp ../BodyMonitoringQt.png BodyMonitoringQt-dpkg/usr/local/share/BodyMonitoring
 
 echo "work fold created and application files copyed!"
 

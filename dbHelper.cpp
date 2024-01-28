@@ -8,7 +8,7 @@ using namespace XyModel;
 QList<XyModel::XyBaseModel*> dbHelper::initXyBaseModelList;
 QSqlDatabase dbHelper::m_db;
 QString dbHelper::m_dbType="QSQLITE";
-QString dbHelper::m_dbFile="bm.db";
+QString dbHelper::m_dbFile="/usr/local/share/BodyMonitoring/bm.db";
 void dbHelper::init(){
     
     m_db = QSqlDatabase::addDatabase(m_dbType);
