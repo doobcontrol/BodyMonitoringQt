@@ -1,12 +1,13 @@
 #pragma once
 #include <QMainWindow>
 #include "xyTableModel.h"
+#include "xyTableView.h"
 
 class EquManageWin : public QMainWindow  {
 public:
     EquManageWin(QWidget *parent = nullptr);
 private:
-    QTableView *tableView;
+    xyTableView *tableView;
     xyTableModel *model;
 
 public slots:

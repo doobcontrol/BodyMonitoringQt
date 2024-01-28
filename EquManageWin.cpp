@@ -34,7 +34,7 @@ EquManageWin::EquManageWin(QWidget *parent)
         showFields,
         this);
     
-    tableView = new QTableView;    
+    tableView = new xyTableView;    
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableView->setSelectionMode(QAbstractItemView::SingleSelection);
     setCentralWidget(tableView);
@@ -52,7 +52,10 @@ void EquManageWin::AddEqu(){
     tableView->edit(model->index(0,0));
 }
 
-void EquManageWin::EditEqu(){    
+void EquManageWin::EditEqu(){
+    if(tableView->inEditing()){
+        return;
+    }
     QList<QModelIndex> selectedRowsList = tableView->selectionModel()->selectedRows();
     if(selectedRowsList.count()==0){
         QMessageBox::critical(this, QString("出错"), QString("请选择要修改的项"));
