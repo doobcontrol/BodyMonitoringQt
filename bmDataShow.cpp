@@ -7,6 +7,13 @@ bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     seriesBreathe = new QLineSeries();
     seriesHeartRate = new QLineSeries();
     
+    QToolBar *toolbar = new QToolBar(this);//addToolBar("main toolbar");
+    toolbar->setFixedHeight(20);
+    toolbar->setFixedWidth(20);
+    toolbar->setIconSize(QSize(16, 16));
+    tagFullScreen = toolbar->addAction(QIcon(":/fullscreen.png"), "全屏");
+    connect(tagFullScreen, &QAction::triggered, this, &bmDataShow::showFull);
+    
     chart = new QChart();
     chart->legend()->hide();
     chart->addSeries(seriesBreathe);
@@ -43,11 +50,16 @@ bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     chart->setTitleBrush(QBrush(Qt::red));
     chart->setTitle("体征实时数据");
     
+    chart->layout()->setContentsMargins(0, 0, 0, 0);
+    chart->setMargins(QMargins(0,0,0,0));
+    chart->setBackgroundRoundness(0);
+
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
-            
-    auto *hbox = new QHBoxLayout(this);
-    hbox->addWidget(chartView, 0);
+    
+    auto *vbox = new QVBoxLayout(this);
+    vbox->addWidget(toolbar,0);
+    vbox->addWidget(chartView, 1);
 }
 void bmDataShow::addBmData(const int Breathe, const int HeartRate){
     
@@ -70,3 +82,16 @@ void bmDataShow::addBmData(const int Breathe, const int HeartRate){
     
     chart->setTitle(QString("设备: %1  －  呼吸: %2  －  心跳: %3").arg(bmID).arg(Breathe).arg(HeartRate));
 }
+void bmDataShow::showFull(){
+    isFull=(!isFull);
+    emit askFullScreen(this, isFull);
+    if(isFull){
+        tagFullScreen->setIcon(QIcon(":/normalscreen.png")); 
+	tagFullScreen->setText(QString("恢复"));	
+    }
+    else{
+        tagFullScreen->setIcon(QIcon(":/fullscreen.png")); 
+	tagFullScreen->setText(QString("全屏"));	
+    }
+}
+

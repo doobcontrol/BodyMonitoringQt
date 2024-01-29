@@ -24,6 +24,7 @@ private:
     startBmStatus m_startBmStatus=stopped;
     QAction *startBm;
     void bmStartStatus(startBmStatus targetStatus);
+    QToolBar *toolbar;
 public slots:
     void logInfo(const QString &s);
     void logbmData(const QString &bmID, const int Breathe, const int HeartRate);
@@ -31,5 +32,6 @@ public slots:
     void loadMovieFrameChanged_Handler(int frameNumber);
     void bmStop();
     void openEquManage();
+    void showFull(const bmDataShow* askBm,const bool isFull);
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(bmMainWin::startBmStatus)

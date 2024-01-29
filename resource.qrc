@@ -9,6 +9,8 @@
     <file alias="Edit.png">images/Edit.png</file>
     <file alias="Delete.png">images/Delete.png</file>
     <file alias="House.png">images/House.png</file>
+    <file alias="fullscreen.png">images/fullscreen.png</file>
+    <file alias="normalscreen.png">images/normalscreen.png</file>
     <file alias="qtbase_zh_CN.qm">images/qtbase_zh_CN.qm</file>
 </qresource>
 </RCC>

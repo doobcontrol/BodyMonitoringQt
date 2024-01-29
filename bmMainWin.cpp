@@ -4,6 +4,7 @@
 #include <QStatusBar>
 #include "bmMainWin.h"
 #include "EquManageWin.h"
+#include <QDebug>
 
 bmMainWin::bmMainWin(QWidget *parent)
     : QMainWindow(parent) {
@@ -25,8 +26,8 @@ bmMainWin::bmMainWin(QWidget *parent)
     exitMenu->addAction(quit);
     connect(quit, &QAction::triggered, this, &QMainWindow::close);
     
-    QToolBar *toolbar = addToolBar("main toolbar");
-    startBm = toolbar->addAction(QIcon(":/Start.png"), "");
+    toolbar = addToolBar("main toolbar");
+    startBm = toolbar->addAction(QIcon(":/Start.png"), "开始");
 
     connect(startBm, &QAction::triggered, this, &bmMainWin::changeStartStatus);
     
@@ -34,6 +35,7 @@ bmMainWin::bmMainWin(QWidget *parent)
     mainWidget = new QWidget(this);
     
     vbox = new QVBoxLayout();
+    vbox->setContentsMargins(0, 0, 0, 0);
     mainWidget->setLayout(vbox);
     setCentralWidget(mainWidget);
 }
@@ -45,7 +47,8 @@ void bmMainWin::logbmData(const QString &bmID, const int Breathe, const int Hear
     if(bds == nullptr){
     	statusBar()->showMessage(QString("设备 %1 已连接").arg(bmID));
         bds=new bmDataShow(bmID, mainWidget);
-        vbox->addWidget(bds,1);        
+        vbox->addWidget(bds,1);  
+        connect( bds, &bmDataShow::askFullScreen, this, &bmMainWin::showFull );         
     }
     else{
     	statusBar()->showMessage(QString("已连接"));
@@ -61,7 +64,7 @@ void bmMainWin::bmStop(){
 }
 
 void bmMainWin::showEvent(QShowEvent *event){
-        QWidget::showEvent(event);
+    QWidget::showEvent(event);
 }
 
 void bmMainWin::closeEvent(QCloseEvent *event){
@@ -92,12 +95,12 @@ void bmMainWin::bmStartStatus(startBmStatus targetStatus){
     if(targetStatus==stopped){
     	startBm->setIcon(QIcon(":/Start.png"));   		
 	startBm->setEnabled(true);
-	startBm->setToolTip(QString("开始"));
+	startBm->setText(QString("开始"));
     }
     else if(targetStatus==started){    	
     	startBm->setIcon(QIcon(":/Stop.png"));   		
 	startBm->setEnabled(true);
-	startBm->setToolTip(QString("停止"));
+	startBm->setText(QString("停止"));
     }
     else if(targetStatus==loading_open){
         //动画不成功
@@ -109,7 +112,7 @@ void bmMainWin::bmStartStatus(startBmStatus targetStatus){
         
         startBm->setIcon(QIcon(":/Loading.png"));    		
 	startBm->setEnabled(false);  
-	startBm->setToolTip(QString("正在启动……"));
+	startBm->setText(QString("正在启动……"));
 	
     	bm = new bmReader(this);
         connect( bm, &bmReader::serialPortErro, this, &bmMainWin::logInfo );
@@ -125,12 +128,31 @@ void bmMainWin::bmStartStatus(startBmStatus targetStatus){
         
         startBm->setIcon(QIcon(":/Loading.png"));    		
 	startBm->setEnabled(false);  
-	startBm->setToolTip(QString("正在停止……"));
+	startBm->setText(QString("正在停止……"));
     }
     m_startBmStatus=targetStatus; 
 }
 void bmMainWin::openEquManage(){
     EquManageWin *emw=new EquManageWin(this);    
     emw->show();
+}
+void bmMainWin::showFull(const bmDataShow* askBm, const bool isFull){
+    if(isFull){
+        menuBar()->hide();
+        statusBar()->hide();
+        toolbar->hide();
+        setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+        show();
+        setWindowState(Qt::WindowFullScreen);	
+    }
+    else{
+        menuBar()->show();
+        statusBar()->show();
+        toolbar->show();
+        showNormal();
+        setWindowFlags(Qt::Window);
+        show();
+        setWindowState(Qt::WindowNoState);
+    }
 }
 

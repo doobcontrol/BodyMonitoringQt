@@ -24,10 +24,6 @@ void dbHelper::init(){
     {
         qDebug() << "Error: connection with database failed";
     }
-    else
-    {
-        qDebug() << "Database: connection ok";
-    }
     
     if(isNewDbFile){    
     	//生成数据表    
