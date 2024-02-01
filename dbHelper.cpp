@@ -30,6 +30,8 @@ void dbHelper::init(){
         for(XyBaseModel* pModel:initXyBaseModelList){       
     	    pModel->createTable();
         }
+        
+        //生成外键
     }
 }
 void dbHelper::queryNoReturn(const QString& sqlStr){
@@ -51,12 +53,17 @@ QMap<QString, QString>* dbHelper::queryRecord(
     const QString& sqlStr, 
     const QList<QMap<QString, QString>>& FieldsList)
 {
-    QSqlQuery query(sqlStr);
-    QMap<QString, QString> *retQMap=new QMap<QString, QString>;
-    if(query.first())
-    {    
-        for(QMap<QString, QString> fQMap:FieldsList){           
-            retQMap->insert(fQMap[XyBaseModel::FieldCode], query.value(fQMap[XyBaseModel::FieldCode]).toString());
+    QSqlQuery query;
+    query.prepare(sqlStr);
+    QMap<QString, QString> *retQMap=nullptr;
+    if(query.exec())
+    {
+        if(query.first())
+        {    
+            retQMap=new QMap<QString, QString>;
+            for(QMap<QString, QString> fQMap:FieldsList){           
+                retQMap->insert(fQMap[XyBaseModel::FieldCode], query.value(fQMap[XyBaseModel::FieldCode]).toString());
+            }
         }
     }
     else
@@ -71,17 +78,27 @@ QList<QMap<QString, QString>>* dbHelper::queryRecords(
     const QString& sqlStr, 
     const QList<QMap<QString, QString>>& FieldsList)
 {
-    QSqlQuery query(sqlStr);
+    QSqlQuery query;
+    query.prepare(sqlStr);
     QList<QMap<QString, QString>>* retList=new QList<QMap<QString, QString>>;
-    while (query.next())
-    {    
-        QMap<QString, QString> tQMap;    
+    if(query.exec())
+    {
+        while (query.next())
+        {    
+            QMap<QString, QString> tQMap;    
          
-        for(QMap<QString, QString> fQMap:FieldsList){           
-            tQMap[fQMap[XyBaseModel::FieldCode]]=query.value(fQMap[XyBaseModel::FieldCode]).toString();
-        }
+            for(QMap<QString, QString> fQMap:FieldsList){           
+                tQMap[fQMap[XyBaseModel::FieldCode]]=query.value(fQMap[XyBaseModel::FieldCode]).toString();
+            }
     
-        retList->append(tQMap);
+            retList->append(tQMap);
+        }
+    }
+    else
+    {
+        qDebug() << sqlStr;
+        qDebug() << "error:"
+                 << query.lastError();
     }
     return retList;
 }

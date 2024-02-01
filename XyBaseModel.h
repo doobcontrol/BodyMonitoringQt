@@ -21,8 +21,10 @@ private:
 
 //实例成员
 public:   
-    QList<QMap<QString, QString>> FieldsList;   
-    void createTable(); 
+    QList<QMap<QString, QString>> FieldsList;
+    QMap<QString, QString> ForeignKeyMap;
+    void createTable();
+    QString getTableCode();
     
     //查询
     QList<QMap<QString, QString>>* selectAll(); 

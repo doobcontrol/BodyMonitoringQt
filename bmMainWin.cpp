@@ -27,6 +27,7 @@ bmMainWin::bmMainWin(QWidget *parent)
     connect(quit, &QAction::triggered, this, &QMainWindow::close);
     
     toolbar = addToolBar("main toolbar");
+    toolbar->setIconSize(QSize(16, 16));
     startBm = toolbar->addAction(QIcon(":/Start.png"), "开始");
 
     connect(startBm, &QAction::triggered, this, &bmMainWin::changeStartStatus);
@@ -38,6 +39,13 @@ bmMainWin::bmMainWin(QWidget *parent)
     vbox->setContentsMargins(0, 0, 0, 0);
     mainWidget->setLayout(vbox);
     setCentralWidget(mainWidget);
+    
+        //开发用临时代码：无设备连接时直接显示图表窗
+        ///*
+        bds=new bmDataShow("AABBCCDDEEFF", mainWidget);
+        vbox->addWidget(bds,1);  
+        connect( bds, &bmDataShow::askFullScreen, this, &bmMainWin::showFull ); 
+        //*/
 }
 void bmMainWin::logInfo(const QString &s){
     statusBar()->showMessage(s);

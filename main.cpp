@@ -3,6 +3,9 @@
 #include "bmMainWin.h"
 #include "dbHelper.h"
 #include "Equ.h"
+#include "MonitorPerson.h"
+#include "MonitorRoom.h"
+#include "EquMonitorObj.h"
 #include <QTranslator>
 #include <QDebug>
 
@@ -21,6 +24,9 @@ int main(int argc, char *argv[]) {
     }
     
     dbHelper::initXyBaseModelList.append(Equ::get());
+    dbHelper::initXyBaseModelList.append(MonitorPerson::get());
+    dbHelper::initXyBaseModelList.append(MonitorRoom::get());
+    dbHelper::initXyBaseModelList.append(EquMonitorObj::get());
     dbHelper::init();
     
     bmMainWin window;

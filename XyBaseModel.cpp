@@ -1,5 +1,6 @@
 #include "dbHelper.h"
 #include "XyBaseModel.h"
+#include "XyKModel.h"
 #include <QDebug>
 
 using namespace XyModel;
@@ -14,11 +15,14 @@ QString XyBaseModel::DataType_float("float");
 QString XyBaseModel::DataType_date("date");
 QString XyBaseModel::DataLength("DataLength");
 QString XyBaseModel::IsPrimaryKey("IsPrimaryKey");
-    
+
+//实例成员
 XyBaseModel::XyBaseModel() {
     //createFieldsList();
 }
-QList<QMap<QString, QString>> FieldsList;
+QString XyBaseModel::getTableCode(){
+    return tableCode;
+}
 void XyBaseModel::createFieldsList(){
 }
 void XyBaseModel::addAField(
@@ -66,6 +70,16 @@ void XyBaseModel::createTable(){
     	if(tQMap[IsPrimaryKey]=="1"){
     	    fieldStr.append(QString(" primary key"));
     	}
+    }
+    	
+    //根据数据库类型判断是否一生成表的同时生成外键。
+    //（如，对SQlite. 要先关闭外键功能 PRAGMA foreign_keys = OFF;对其它数据库，以免循环引用问题，全部表建完后再建外键）
+    for(QString key:ForeignKeyMap.keys()){    
+    	fieldStr.append(QString(",  FOREIGN KEY(%1) REFERENCES %2(%3)")
+    	    .arg(key)
+    	    .arg(ForeignKeyMap[key])
+    	    .arg(XyKModel::fID)
+    	    );
     }
     
     QString sqlStr=QString("create table  %1 (%2)").arg(tableCode).arg(fieldStr);

@@ -18,6 +18,8 @@ public:
     //新增
     QString newRecord();
     QString newRecord(const QString& pk);
+    QString newRecord(QMap<QString, QString> recordMap);
+    QString newRecord(const QString& pk, QMap<QString, QString> recordMap);
     
     //修改    
     void updateOneFieldByPk(const QString& pk, const QString& fieldName, const QString& fieldValue);
