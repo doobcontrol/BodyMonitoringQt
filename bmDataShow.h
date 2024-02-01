@@ -20,12 +20,14 @@ class bmDataShow : public QWidget  {
     QGroupBox *MonitorObjGroupBox;
     QLabel* RoomLabel;
     QLabel* PersonLabel;
+    QLabel* PhotoLabel;
     QMap<QString, QString>* equMonitorObj=nullptr;
     QMap<QString, QString>* monitorRoom=nullptr;
     QMap<QString, QString>* monitorPerson=nullptr;
 public:
     bmDataShow(QString bmID, QWidget *parent = nullptr);
     void addBmData(const int Breathe, const int HeartRate);
+    bool eventFilter(QObject *watched, QEvent *event);
 public slots:
     void showFull();
     void setMonitorInfo();

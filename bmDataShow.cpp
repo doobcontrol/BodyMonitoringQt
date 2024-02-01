@@ -4,6 +4,7 @@
 #include "EquMonitorObj.h"
 #include "MonitorRoom.h"
 #include "MonitorPerson.h"
+#include "bmMainWin.h"
 
 bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     : QWidget(parent) {
@@ -89,8 +90,12 @@ bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     groupvbox = new QVBoxLayout;  
     RoomLabel=new QLabel("房间：－－");
     PersonLabel=new QLabel("人员：－－");
+    PhotoLabel=new QLabel();
+    PhotoLabel->resize(150,200);
+    PhotoLabel->installEventFilter(this);//加事件过滤器以接收双击事件
     groupvbox->addWidget(RoomLabel);
     groupvbox->addWidget(PersonLabel);
+    groupvbox->addWidget(PhotoLabel);
     groupvbox->addStretch(1);
     MonitorObjGroupBox->setLayout(groupvbox);
     vbox->addWidget(MonitorObjGroupBox);
@@ -156,8 +161,51 @@ void bmDataShow::showMonitorInfo(){
         monitorPerson = MonitorPerson::get()->selectByPk((*equMonitorObj)[EquMonitorObj::fPersonID]);  
         if(monitorPerson!=nullptr){      
             PersonLabel->setText(QString("人员: %1").arg((*monitorPerson)[MonitorPerson::fPName]));
+            
+            QString targetFile(bmMainWin::workDir);
+            targetFile.append(QString("/%1").arg((*monitorPerson)[XyKModel::fID]));
+            if(!QFile::exists(targetFile)){
+                targetFile=":/photoicon.png";
+            }
+            
+            QPixmap pm(targetFile);
+            // get label dimensions
+            int w = 150;//PhotoLabel->width();
+            int h = 200;//PhotoLabel->height();
+            // set a scaled pixmap to a w x h window keeping its aspect ratio 
+            PhotoLabel->setPixmap(pm.scaled(w,h,Qt::KeepAspectRatio));
         }
     }
 }
-
+bool bmDataShow::eventFilter(QObject *watched, QEvent *event){
+    if(qobject_cast<QLabel*>(watched) == PhotoLabel && event->type() == QEvent::MouseButtonDblClick)
+    {
+        if(monitorPerson==nullptr){
+            QMessageBox::critical(this, QString("出错"), QString("请先配置监测对象再设置照片"));
+            return true;
+        }
+        
+        QString fileName = QFileDialog::getOpenFileName(this,
+            tr("选择照片"), "/home", tr("照片文件 (*.png *.jpg *.bmp)"));    
+        if(fileName.isEmpty()){
+            return true;
+        }
+        QString targetFile(bmMainWin::workDir);
+        targetFile.append(QString("/%1").arg((*monitorPerson)[XyKModel::fID]));
+        if(QFile::exists(targetFile)){
+            QFile::remove(targetFile);
+        }
+        QFile::copy(fileName,targetFile);
+        
+        QPixmap pm(targetFile);
+        // get label dimensions
+        int w = 150;//PhotoLabel->width();
+        int h = 200;//PhotoLabel->height();
+        // set a scaled pixmap to a w x h window keeping its aspect ratio 
+        PhotoLabel->setPixmap(pm.scaled(w,h,Qt::KeepAspectRatio));
+                    
+        return true;
+    }
+    return false;
+}
 
