@@ -149,10 +149,14 @@ void bmDataShow::showMonitorInfo(){
     equMonitorObj = EquMonitorObj::get()->selectByPk(bmID);
     if(equMonitorObj!=nullptr){
         monitorRoom = MonitorRoom::get()->selectByPk((*equMonitorObj)[EquMonitorObj::fRoomID]);
-        monitorPerson = MonitorPerson::get()->selectByPk((*equMonitorObj)[EquMonitorObj::fPersonID]);
+        if(monitorRoom!=nullptr){
+            RoomLabel->setText(QString("房间: %1").arg((*monitorRoom)[MonitorRoom::fRoomCode]));
+        }
         
-        RoomLabel->setText(QString("房间: %1").arg((*monitorRoom)[MonitorRoom::fRoomCode]));
-        PersonLabel->setText(QString("人员: %1").arg((*monitorPerson)[MonitorPerson::fPName]));
+        monitorPerson = MonitorPerson::get()->selectByPk((*equMonitorObj)[EquMonitorObj::fPersonID]);  
+        if(monitorPerson!=nullptr){      
+            PersonLabel->setText(QString("人员: %1").arg((*monitorPerson)[MonitorPerson::fPName]));
+        }
     }
 }
 

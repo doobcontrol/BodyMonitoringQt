@@ -44,7 +44,7 @@ QString XyKModel::newRecord(const QString& pk, QMap<QString, QString> recordMap)
     return pk;
 }
 
-//新增
+//修改
 void XyKModel::updateOneFieldByPk(const QString& pk, const QString& fieldCode, const QString& fieldValue){ //slot
    QString setStr(QString("%1 = '%2'").arg(fieldCode).arg(fieldValue));
    QString whereStr(QString("%1 = '%2'").arg(fID).arg(pk));
@@ -57,6 +57,20 @@ void XyKModel::updateByRowColumn(const QMap<QString, QString> recordMap, const Q
     QString fieldCode=fieldMap[FieldCode]; 
     QString fieldValue=recordMap[fieldCode];
     updateOneFieldByPk(pk, fieldCode, fieldValue);
+}
+void XyKModel::updateByPk(const QString& pk, QMap<QString, QString> recordMap){
+   QString setStr;
+   for(QString key:recordMap.keys()){
+       if(!setStr.isEmpty()){
+           setStr.append(QString(","));
+       }
+       setStr.append(QString("%1 = '%2'").arg(key).arg(recordMap[key]));
+   }
+   
+   QString whereStr(QString("%1 = '%2'").arg(fID).arg(pk));   
+   QString sqlStr=QString("UPDATE %1 SET %2 WHERE %3").arg(tableCode).arg(setStr).arg(whereStr);
+   
+   dbHelper::queryNoReturn(sqlStr);
 }
 
 //删除

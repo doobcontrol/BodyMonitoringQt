@@ -24,6 +24,7 @@ public:
     //修改    
     void updateOneFieldByPk(const QString& pk, const QString& fieldName, const QString& fieldValue);
     void updateByRowColumn(QMap<QString, QString> recordMap, QMap<QString, QString> fieldMap);
+    void updateByPk(const QString& pk, QMap<QString, QString> recordMap);
     
     //删除
     void deleteByPk(const QString& pk);

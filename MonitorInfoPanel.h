@@ -1,6 +1,9 @@
 #pragma once
 #include <QMainWindow>
 #include <QLineEdit>
+#include <QListWidget>
+#include <QList>
+#include <QMap>
 
 class MonitorInfoPanel : public QMainWindow  {
     Q_OBJECT
@@ -11,10 +14,16 @@ class MonitorInfoPanel : public QMainWindow  {
     void getMonitorInfo();
     QLineEdit roomIDEdit;
     QLineEdit personNameEdit;
+    QListWidget *roomlistWidget;
+    QListWidget *namelistWidget;
+    QList<QMap<QString, QString>>* roomRowList;
+    QList<QMap<QString, QString>>* personRowList;
 public:
     MonitorInfoPanel(QString bmID, QWidget *parent = nullptr);
 public slots:
     void saveSelection();
+    void setRoomFromList();
+    void setPersonFromList();
 signals:
     void ok();
 };

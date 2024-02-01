@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QListWidget>
 #include <QPushButton>
+#include <QMessageBox>
 
 MonitorInfoPanel::MonitorInfoPanel(QString bmID, QWidget *parent)
     : QMainWindow(parent) {   
@@ -27,20 +28,26 @@ MonitorInfoPanel::MonitorInfoPanel(QString bmID, QWidget *parent)
     gridLayout->addWidget(&roomIDEdit,rowCount,1,1,1);
     
     rowCount++;
-    QListWidget *roomlistWidget = new QListWidget(this);
+    roomlistWidget = new QListWidget(this);
     gridLayout->addWidget(roomlistWidget,rowCount,1,1,1);
-    QList<QMap<QString, QString>>* roomRowList = MonitorRoom::get()->selectAll();
+    roomRowList = MonitorRoom::get()->selectAll();
     for(QMap<QString, QString> roomRow:(*roomRowList)){
         new QListWidgetItem(roomRow[MonitorRoom::fRoomCode], roomlistWidget);
     }
+    connect(roomlistWidget, &QListWidget::itemSelectionChanged, this, &MonitorInfoPanel::setRoomFromList);
     
     rowCount++;
     gridLayout->addWidget(new QLabel("姓名："),rowCount,0,1,1);
     gridLayout->addWidget(&personNameEdit,rowCount,1,1,1);    
     
     rowCount++;
-    QListWidget *namelistWidget = new QListWidget(this);
+    namelistWidget = new QListWidget(this);
     gridLayout->addWidget(namelistWidget,rowCount,1,1,1);
+    personRowList = MonitorPerson::get()->selectAll();
+    for(QMap<QString, QString> personRow:(*personRowList)){
+        new QListWidgetItem(personRow[MonitorPerson::fPName], namelistWidget);
+    }
+    connect(namelistWidget, &QListWidget::itemSelectionChanged, this, &MonitorInfoPanel::setPersonFromList);
     
     auto *vbox = new QVBoxLayout();
     vbox->addItem(gridLayout);
@@ -66,24 +73,69 @@ void MonitorInfoPanel::getMonitorInfo(){
     //查询 监测对象配置表 若有记录，配置当前监测房间，人员
     equMonitorObj = EquMonitorObj::get()->selectByPk(bmID);
     if(equMonitorObj!=nullptr){
-    
+        monitorRoom = MonitorRoom::get()->selectByPk((*equMonitorObj)[EquMonitorObj::fRoomID]);
+        if(monitorRoom!=nullptr){
+            roomIDEdit.setText((*monitorRoom)[MonitorRoom::fRoomCode]);
+        }
+        monitorPerson = MonitorPerson::get()->selectByPk((*equMonitorObj)[EquMonitorObj::fPersonID]);
+        if(monitorPerson!=nullptr){
+            personNameEdit.setText((*monitorPerson)[MonitorPerson::fPName]);
+        }
     }
 }
 void MonitorInfoPanel::saveSelection(){
+    if(roomIDEdit.text().trimmed()=="" || personNameEdit.text().trimmed()==""){
+        QMessageBox::critical(this, QString("出错"), QString("房间和姓名均不能为空"));
+        return;
+    }
     //save
-    QMap<QString, QString> roomrecordMap;
-    roomrecordMap[MonitorRoom::fRoomCode]=roomIDEdit.text();
-    QString roomID=MonitorRoom::get()->newRecord(roomrecordMap);
+    QString roomID;
+    for(QMap<QString, QString> rItem:(*roomRowList)){
+        if(rItem[MonitorRoom::fRoomCode]==roomIDEdit.text().trimmed()){
+            roomID=rItem[XyKModel::fID];
+        }
+    }
+    if(roomID.isEmpty()){
+        QMap<QString, QString> roomrecordMap;
+        roomrecordMap[MonitorRoom::fRoomCode]=roomIDEdit.text().trimmed();
+        roomID=MonitorRoom::get()->newRecord(roomrecordMap);
+    }
     
-    QMap<QString, QString> personrecordMap;
-    personrecordMap[MonitorPerson::fPName]=personNameEdit.text();
-    QString personID=MonitorPerson::get()->newRecord(personrecordMap);
+    QString personID;
+    for(QMap<QString, QString> rItem:(*personRowList)){
+        if(rItem[MonitorPerson::fPName]==personNameEdit.text().trimmed()){
+            personID=rItem[XyKModel::fID];
+        }
+    }
+    if(personID.isEmpty()){
+        QMap<QString, QString> personrecordMap;
+        personrecordMap[MonitorPerson::fPName]=personNameEdit.text().trimmed();
+        personID=MonitorPerson::get()->newRecord(personrecordMap);
+    }
     
     QMap<QString, QString> EquMonitorObjrecordMap;
-    EquMonitorObjrecordMap[EquMonitorObj::fRoomID]=roomID;
-    EquMonitorObjrecordMap[EquMonitorObj::fPersonID]=personID;
-    EquMonitorObj::get()->newRecord(bmID, EquMonitorObjrecordMap);    
+    if(equMonitorObj==nullptr || roomID!=(*equMonitorObj)[EquMonitorObj::fRoomID]){
+        EquMonitorObjrecordMap[EquMonitorObj::fRoomID]=roomID;
+    }
+    if(equMonitorObj==nullptr || personID!=(*equMonitorObj)[EquMonitorObj::fPersonID]){
+        EquMonitorObjrecordMap[EquMonitorObj::fPersonID]=personID;
+    }
+    
+    if(EquMonitorObjrecordMap.count()!=0){
+        if(equMonitorObj==nullptr){
+            EquMonitorObj::get()->newRecord(bmID, EquMonitorObjrecordMap); 
+        }
+        else{
+            EquMonitorObj::get()->updateByPk(bmID, EquMonitorObjrecordMap); 
+        }
+    }   
     
     emit ok();
     close();
+}
+void MonitorInfoPanel::setRoomFromList(){
+    roomIDEdit.setText(roomlistWidget->currentItem()->text());
+}
+void MonitorInfoPanel::setPersonFromList(){
+    personNameEdit.setText(namelistWidget->currentItem()->text());
 }
