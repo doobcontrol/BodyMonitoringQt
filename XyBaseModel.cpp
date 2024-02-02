@@ -86,6 +86,9 @@ void XyBaseModel::createTable(){
     
     dbHelper::queryNoReturn(sqlStr);
 }
+void XyBaseModel::createInitRecords(){
+    insertRecordsList(InitRecordsList);
+}
 
 QList<QMap<QString, QString>>* XyBaseModel::selectAll(){
     QString sqlStr = QString("SELECT * FROM %1").arg(tableCode);
@@ -106,4 +109,9 @@ void XyBaseModel::insertOne(const QMap<QString, QString>& recordMap){
    QString sqlStr=QString("INSERT INTO %1 (%2) VALUES (%3)").arg(tableCode).arg(fieldsStr).arg(valuesStr);
    
    dbHelper::queryNoReturn(sqlStr);
+}
+void XyBaseModel::insertRecordsList(const QList<QMap<QString, QString>>& RecordsList){
+    for(QMap<QString, QString> recordMap:RecordsList){
+        insertOne(recordMap);
+    }
 }

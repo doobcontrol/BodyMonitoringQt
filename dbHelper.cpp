@@ -31,7 +31,13 @@ void dbHelper::init(){
     	    pModel->createTable();
         }
         
+        //生成模型配置的初始数据 
+        for(XyBaseModel* pModel:initXyBaseModelList){       
+    	    pModel->createInitRecords();
+        }
+        
         //生成外键
+        
     }
 }
 void dbHelper::queryNoReturn(const QString& sqlStr){

@@ -3,6 +3,7 @@
 #include "bmMainWin.h"
 #include "dbHelper.h"
 #include "Equ.h"
+#include "ConfigPars.h"
 #include "MonitorPerson.h"
 #include "MonitorRoom.h"
 #include "EquMonitorObj.h"
@@ -24,6 +25,7 @@ int main(int argc, char *argv[]) {
     }
     
     dbHelper::initXyBaseModelList.append(Equ::get());
+    dbHelper::initXyBaseModelList.append(ConfigPars::get());
     dbHelper::initXyBaseModelList.append(MonitorPerson::get());
     dbHelper::initXyBaseModelList.append(MonitorRoom::get());
     dbHelper::initXyBaseModelList.append(EquMonitorObj::get());

@@ -23,14 +23,17 @@ private:
 public:   
     QList<QMap<QString, QString>> FieldsList;
     QMap<QString, QString> ForeignKeyMap;
+    QList<QMap<QString, QString>> InitRecordsList;
     void createTable();
     QString getTableCode();
+    void createInitRecords();
     
     //查询
     QList<QMap<QString, QString>>* selectAll(); 
        
     //新增
     void insertOne(const QMap<QString, QString>& recordMap);
+    void insertRecordsList(const QList<QMap<QString, QString>>& RecordsList);
     
 protected:
     XyBaseModel();
