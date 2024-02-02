@@ -4,6 +4,7 @@
 #include <QStatusBar>
 #include "bmMainWin.h"
 #include "EquManageWin.h"
+#include "frmAlertSet.h"
 #include <QDebug>
 
 QString bmMainWin::workDir="/usr/local/share/BodyMonitoring";
@@ -12,20 +13,27 @@ bmMainWin::bmMainWin(QWidget *parent)
     setWindowIcon(QIcon(":/Main.png"));//只对windows有效，在linux下无效
     resize(800, 500);
     
-    menuBar()->addMenu("人员管理");
+    QAction *tQAction=nullptr;
+    QMenu *tempMenu=nullptr;
     
-    QMenu *exitMenu = menuBar()->addMenu("设备管理");
-    auto *quit = new QAction(QIcon(":/House.png"),"设备管理", this);
-    exitMenu->addAction(quit);
-    connect(quit, &QAction::triggered, this, &bmMainWin::openEquManage);
+    tempMenu = menuBar()->addMenu("人员管理");
     
-    menuBar()->addMenu("系统管理");
-    menuBar()->addMenu("查询统计");
+    tempMenu = menuBar()->addMenu("设备管理");
+    tQAction = new QAction(QIcon(":/House.png"),"设备管理", this);
+    tempMenu->addAction(tQAction);
+    connect(tQAction, &QAction::triggered, this, &bmMainWin::openEquManage);
     
-    exitMenu = menuBar()->addMenu("退出");
-    quit = new QAction(QIcon(":/Exit.png"),"退出", this);
-    exitMenu->addAction(quit);
-    connect(quit, &QAction::triggered, this, &QMainWindow::close);
+    tempMenu = menuBar()->addMenu("系统管理");
+    tQAction = new QAction(QIcon(":/alertset.png"),"报警参数", this);
+    tempMenu->addAction(tQAction);
+    connect(tQAction, &QAction::triggered, this, &bmMainWin::openAlertSet);
+    
+    tempMenu = menuBar()->addMenu("查询统计");
+    
+    tempMenu = menuBar()->addMenu("退出");
+    tQAction = new QAction(QIcon(":/Exit.png"),"退出", this);
+    tempMenu->addAction(tQAction);
+    connect(tQAction, &QAction::triggered, this, &QMainWindow::close);
     
     toolbar = addToolBar("main toolbar");
     toolbar->setIconSize(QSize(16, 16));
@@ -143,6 +151,10 @@ void bmMainWin::bmStartStatus(startBmStatus targetStatus){
 }
 void bmMainWin::openEquManage(){
     EquManageWin *emw=new EquManageWin(this);    
+    emw->show();
+}
+void bmMainWin::openAlertSet(){
+    frmAlertSet *emw=new frmAlertSet(this);    
     emw->show();
 }
 void bmMainWin::showFull(const bmDataShow* askBm, const bool isFull){

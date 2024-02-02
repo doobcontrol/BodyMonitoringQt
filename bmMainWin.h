@@ -33,6 +33,7 @@ public slots:
     void loadMovieFrameChanged_Handler(int frameNumber);
     void bmStop();
     void openEquManage();
+    void openAlertSet();
     void showFull(const bmDataShow* askBm,const bool isFull);
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(bmMainWin::startBmStatus)
