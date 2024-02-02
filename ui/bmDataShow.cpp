@@ -1,11 +1,11 @@
 
 #include "bmDataShow.h"
 #include "MonitorInfoPanel.h"
-#include "EquMonitorObj.h"
-#include "MonitorRoom.h"
-#include "MonitorPerson.h"
+#include "../xyModel/EquMonitorObj.h"
+#include "../xyModel/MonitorRoom.h"
+#include "../xyModel/MonitorPerson.h"
 #include "bmMainWin.h"
-#include "ConfigPars.h"
+#include "../xyModel/ConfigPars.h"
 
 bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     : QWidget(parent) {
