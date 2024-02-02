@@ -50,11 +50,11 @@ bmMainWin::bmMainWin(QWidget *parent)
     setCentralWidget(mainWidget);
     
         //开发用临时代码：无设备连接时直接显示图表窗
-        ///*
+        /*
         bds=new bmDataShow("AABBCCDDEEFF", mainWidget);
         vbox->addWidget(bds,1);  
         connect( bds, &bmDataShow::askFullScreen, this, &bmMainWin::showFull ); 
-        //*/
+        */
 }
 void bmMainWin::logInfo(const QString &s){
     statusBar()->showMessage(s);

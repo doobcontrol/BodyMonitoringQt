@@ -14,6 +14,8 @@
     <file alias="monitorobj.png">images/monitorobj.png</file>
     <file alias="photoicon.png">images/photoicon.png</file>
     <file alias="alertset.png">images/alertset.png</file>
+    <file alias="alert.gif">images/alert.gif</file>
+    <file alias="alerm.wav">images/alerm.wav</file>
     <file alias="qtbase_zh_CN.qm">images/qtbase_zh_CN.qm</file>
 </qresource>
 </RCC>

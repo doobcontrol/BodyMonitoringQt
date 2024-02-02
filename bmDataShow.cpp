@@ -5,6 +5,7 @@
 #include "MonitorRoom.h"
 #include "MonitorPerson.h"
 #include "bmMainWin.h"
+#include "ConfigPars.h"
 
 bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     : QWidget(parent) {
@@ -64,7 +65,8 @@ bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     
     
     auto *vbox = new QVBoxLayout();
-    vbox->addWidget(toolbar,0); 
+    vbox->addWidget(toolbar,0);     
+    
     
     QGroupBox *groupBox = new QGroupBox(QString(tr("设备：%1")).arg(bmID), this);
     groupBox->setAlignment(Qt::AlignHCenter);
@@ -79,6 +81,9 @@ bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     HeartRateLabel=new QLabel("心跳：－－");
     HeartRateLabel->setFont(bmDatafont);
     HeartRateLabel->setStyleSheet("QLabel { color : red; }");
+    alertLabel=new QLabel();
+    alertLabel->hide();
+    groupvbox->addWidget(alertLabel);
     groupvbox->addWidget(BreatheLabel);
     groupvbox->addWidget(HeartRateLabel);
     groupvbox->addStretch(1);
@@ -131,6 +136,8 @@ void bmDataShow::addBmData(const int Breathe, const int HeartRate){
     BreatheLabel->setText(QString("呼吸: %1").arg(Breathe));
     
     showMonitorInfo();
+    
+    checkAlert(Breathe, HeartRate);
 }
 void bmDataShow::showFull(){
     isFull=(!isFull);
@@ -207,5 +214,47 @@ bool bmDataShow::eventFilter(QObject *watched, QEvent *event){
         return true;
     }
     return false;
+}
+void bmDataShow::checkAlert(const int Breathe, const int HeartRate){
+    bool doAlert=false;
+    if(ConfigPars::get()->getValue(ConfigPars::HeartRateMax).toInt()<=HeartRate
+        || ConfigPars::get()->getValue(ConfigPars::HeartRateMin).toInt()>=HeartRate
+        || ConfigPars::get()->getValue(ConfigPars::BreatheMax).toInt()<=Breathe
+        || ConfigPars::get()->getValue(ConfigPars::BreatheMin).toInt()>=Breathe
+        ){
+        doAlert=true;
+    }
+    
+    if(doAlert){
+        startAlert();
+    }
+    else{
+        stopAlert();
+    }
+}
+void bmDataShow::startAlert(){    
+    if(movie==nullptr){
+        int w = 50;
+        int h = 50;
+        movie = new QMovie(":/alert.gif");
+        movie->setScaledSize(QSize(w,h));
+        alertLabel->setMovie (movie);
+        
+        sound=new QSound(":/alerm.wav");
+        sound->setLoops(QSound::Infinite);
+    }
+    
+    movie->start();   
+    sound->play(); 
+    alertLabel->show();       
+}
+void bmDataShow::stopAlert(){
+    if(movie!=nullptr){
+        movie->stop();  
+    }
+    if(sound!=nullptr){
+        sound->stop(); 
+    }   
+    alertLabel->hide();
 }
 
