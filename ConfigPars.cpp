@@ -41,3 +41,23 @@ void ConfigPars::addInitRecord(QString pName, QString pValue){
     recordMap[fParValue]=pValue;
     InitRecordsList.append(recordMap);
 }
+void ConfigPars::createPvMap(){
+    pvMap=new QMap<QString, QString>;
+    QList<QMap<QString, QString>>* pList=get()->selectAll();
+    for(QMap<QString, QString> pMap:(*pList)){
+        (*pvMap)[pMap[fID]]=pMap[fParValue];
+    }
+}
+QString ConfigPars::getValue(QString pName){
+    if(pvMap==nullptr){
+        createPvMap();
+    }
+    return (*pvMap)[pName];
+}
+void ConfigPars::setValue(QString pName, QString pValue){
+    if(pvMap==nullptr){
+        createPvMap();
+    }
+    (*pvMap)[pName]=pValue;
+    updateOneFieldByPk(pName,fParValue,pValue);
+}

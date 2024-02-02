@@ -22,8 +22,12 @@ private:
 
 public:
     ConfigPars();
+    QString getValue(QString pName);
+    void setValue(QString pName, QString pValue);
 private:
     void addInitRecord(QString pName, QString pValue);
+    QMap<QString, QString>* pvMap=nullptr;
+    void createPvMap();
 protected:
     void createFieldsList();
 };

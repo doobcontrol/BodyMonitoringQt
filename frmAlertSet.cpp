@@ -61,7 +61,7 @@ void frmAlertSet::saveValue(QString newValue){
    QObject* obj = sender();
    for(QString key:editMap.keys()){
        if( obj == editMap[key] ){ 
-           ConfigPars::get()->updateOneFieldByPk(key,ConfigPars::fParValue,newValue);
+           ConfigPars::get()->setValue(key, newValue);
        }
    }
 }
