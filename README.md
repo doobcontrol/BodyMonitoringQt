@@ -26,3 +26,6 @@ git remote add origin git@github.com:doobcontrol/BodyMonitoringQt.git
 手动安装libQt5Charts：  
 sudo apt install libqt5charts5  （在开发机上应安装  sudo apt install libqt5charts5-dev）  
 应在安装程序中实现检查此包是否存在，不存在则安装的功能？？  
+2，实现声音播放需要加multimedia模块引用，此模块的安装方法：  
+sudo apt-get update  
+sudo apt-get install qtmultimedia5-dev  
