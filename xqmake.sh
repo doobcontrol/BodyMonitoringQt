@@ -2,7 +2,7 @@
 
 # Author : dooacontrol
 
-rm -f qrc_resource.cpp
+rm -f tmp/qrc_resource.cpp
 
 echo "reQmake project:"
 qmake -project

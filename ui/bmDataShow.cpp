@@ -6,6 +6,8 @@
 #include "../xyModel/MonitorPerson.h"
 #include "bmMainWin.h"
 #include "../xyModel/ConfigPars.h"
+#include "../xyModel/bmRecord.h"
+#include "../xyModel/bmRecordItem.h"
 
 bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     : QWidget(parent) {
@@ -17,6 +19,8 @@ bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     toolbar->setIconSize(QSize(16, 16));
     tagFullScreen = toolbar->addAction(QIcon(":/fullscreen.png"), "全屏");
     connect(tagFullScreen, &QAction::triggered, this, &bmDataShow::showFull);
+    record = toolbar->addAction(QIcon(":/startrecord.png"), "点击录制当前数据");
+    connect(record, &QAction::triggered, this, &bmDataShow::recordData);
     QAction *setMonitorobj = toolbar->addAction(QIcon(":/monitorobj.png"), "配置监测目标");
     connect(setMonitorobj, &QAction::triggered, this, &bmDataShow::setMonitorInfo);
     
@@ -138,6 +142,16 @@ void bmDataShow::addBmData(const int Breathe, const int HeartRate){
     showMonitorInfo();
     
     checkAlert(Breathe, HeartRate);
+    
+    //save
+    if(inRecord){
+        QMap<QString, QString> recordItemMap;
+        recordItemMap[bmRecordItem::fRecordID]=recordID;
+        recordItemMap[bmRecordItem::fTimeID]=QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+        recordItemMap[bmRecordItem::fBreathe]=QString("%1").arg(HeartRate);
+        recordItemMap[bmRecordItem::fHeartRate]=QString("%1").arg(Breathe);
+        bmRecordItem::get()->newRecord(recordItemMap);        
+    }
 }
 void bmDataShow::showFull(){
     isFull=(!isFull);
@@ -150,6 +164,32 @@ void bmDataShow::showFull(){
         tagFullScreen->setIcon(QIcon(":/fullscreen.png")); 
 	tagFullScreen->setText(QString("全屏"));	
     }
+}
+void bmDataShow::recordData(){
+    if(!inRecord){
+    	if(equMonitorObj==nullptr
+    	    || monitorRoom==nullptr
+    	    || monitorPerson==nullptr
+    	){
+            QMessageBox::critical(this, QString("出错"), QString("请先配置监测对象再录制数据"));
+    	    return;
+    	}
+    	
+    	QMap<QString, QString> recordMap;
+        recordMap[bmRecord::fEquID]=(*equMonitorObj)[XyKModel::fID];
+        recordMap[bmRecord::fRoomID]=(*equMonitorObj)[EquMonitorObj::fRoomID];
+        recordMap[bmRecord::fPersonID]=(*equMonitorObj)[EquMonitorObj::fPersonID];
+        recordMap[bmRecord::fStartTimeID]=QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+        recordID=bmRecord::get()->newRecord(recordMap);   
+    	
+        record->setIcon(QIcon(":/stoprecord.png")); 
+	record->setText(QString("数据录制中，点击停止"));	
+    }
+    else{
+        record->setIcon(QIcon(":/startrecord.png")); 
+	record->setText(QString("点击录制当前数据"));	
+    }
+    inRecord=(!inRecord);
 }
 void bmDataShow::setMonitorInfo(){
     MonitorInfoPanel *mip=new MonitorInfoPanel(bmID,this);    

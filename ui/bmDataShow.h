@@ -15,7 +15,9 @@ class bmDataShow : public QWidget  {
     QString bmID;
     QChartView qChartView;
     bool isFull=false;
+    bool inRecord=false;
     QAction *tagFullScreen;
+    QAction *record;
     QLabel* BreatheLabel;
     QLabel* HeartRateLabel;
     QGroupBox *MonitorObjGroupBox;
@@ -28,12 +30,14 @@ class bmDataShow : public QWidget  {
     QMap<QString, QString>* monitorPerson=nullptr;
     QMovie *movie=nullptr;
     QSound *sound=nullptr;
+    QString recordID;
 public:
     bmDataShow(QString bmID, QWidget *parent = nullptr);
     void addBmData(const int Breathe, const int HeartRate);
     bool eventFilter(QObject *watched, QEvent *event);
 public slots:
     void showFull();
+    void recordData();
     void setMonitorInfo();
     void showMonitorInfo();
     void checkAlert(const int Breathe, const int HeartRate);

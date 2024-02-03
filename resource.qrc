@@ -16,6 +16,8 @@
     <file alias="alertset.png">images/alertset.png</file>
     <file alias="alert.gif">images/alert.gif</file>
     <file alias="alerm.wav">images/alerm.wav</file>
+    <file alias="startrecord.png">images/startrecord.png</file>
+    <file alias="stoprecord.png">images/stoprecord.png</file>
     <file alias="qtbase_zh_CN.qm">images/qtbase_zh_CN.qm</file>
 </qresource>
 </RCC>

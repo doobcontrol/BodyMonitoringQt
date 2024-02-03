@@ -7,6 +7,8 @@
 #include "xyModel/MonitorPerson.h"
 #include "xyModel/MonitorRoom.h"
 #include "xyModel/EquMonitorObj.h"
+#include "xyModel/bmRecord.h"
+#include "xyModel/bmRecordItem.h"
 #include <QTranslator>
 #include <QDebug>
 
@@ -29,6 +31,8 @@ int main(int argc, char *argv[]) {
     dbHelper::initXyBaseModelList.append(MonitorPerson::get());
     dbHelper::initXyBaseModelList.append(MonitorRoom::get());
     dbHelper::initXyBaseModelList.append(EquMonitorObj::get());
+    dbHelper::initXyBaseModelList.append(bmRecord::get());
+    dbHelper::initXyBaseModelList.append(bmRecordItem::get());
     dbHelper::init();
     
     bmMainWin window;
