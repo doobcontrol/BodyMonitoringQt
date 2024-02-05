@@ -25,7 +25,14 @@ git remote add origin git@github.com:doobcontrol/BodyMonitoringQt.git
 ./BodyMonitoringQt: error while loading shared libraries: libQt5Charts.so.5: cannot open shared object file: No such file or directory  
 手动安装libQt5Charts：  
 sudo apt install libqt5charts5  （在开发机上应安装  sudo apt install libqt5charts5-dev）  
-应在安装程序中实现检查此包是否存在，不存在则安装的功能？？  
-2，实现声音播放需要加multimedia模块引用，此模块的安装方法：  
-sudo apt-get update  
-sudo apt-get install qtmultimedia5-dev  
+应在安装程序中实现检查此包是否存在，不存在则安装的功能？？      
+2，实现声音播放需要加multimedia模块引用，此模块的安装方法：    
+sudo apt-get update    
+sudo apt-get install qtmultimedia5-dev    
+3，20240206 编译过程管理已由qmake改为cmake，同时打包方式改为cmake的cpack  
+由于此更改，qt也由5升级到6，打包时可连程序依赖库（qt6相关库）一起打包发布了  
+命令备忘：  
+cmake -DCMAKE_INSTALL_PREFIX=tmp .. #本机测试安装到此目录，若不做本机测试，直接cpack 则不需此参数  
+cmake --build .  
+cmake --install .  
+cpack -G DEB  
