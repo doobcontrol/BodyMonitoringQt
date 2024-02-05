@@ -3,7 +3,7 @@
 #include <QToolBar>
 #include <QVBoxLayout>
 #include <QTableView>
-#include "../xyModel/Equ.h"
+#include "Equ.h"
 #include <QDebug>
 #include "EquManageWin.h"
 #include <QMessageBox>

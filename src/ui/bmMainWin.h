@@ -4,6 +4,12 @@
 #include <QLabel>
 #include "bmReader.h"
 #include "bmDataShow.h"
+#include <QToolBar>
+#include <QGraphicsLayout>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QMessageBox>
+#include <QFile>
 
 class bmMainWin : public QMainWindow  {
     void showEvent(QShowEvent *event) override;

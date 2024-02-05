@@ -1,14 +1,14 @@
 #include <QApplication>
 #include <QTextStream>
-#include "ui/bmMainWin.h"
-#include "xyModel/dbHelper.h"
-#include "xyModel/Equ.h"
-#include "xyModel/ConfigPars.h"
-#include "xyModel/MonitorPerson.h"
-#include "xyModel/MonitorRoom.h"
-#include "xyModel/EquMonitorObj.h"
-#include "xyModel/bmRecord.h"
-#include "xyModel/bmRecordItem.h"
+#include "bmMainWin.h"
+#include "dbHelper.h"
+#include "Equ.h"
+#include "ConfigPars.h"
+#include "MonitorPerson.h"
+#include "MonitorRoom.h"
+#include "EquMonitorObj.h"
+#include "bmRecord.h"
+#include "bmRecordItem.h"
 #include <QTranslator>
 #include <QDebug>
 

@@ -1,7 +1,7 @@
 #include "MonitorInfoPanel.h"
-#include "../xyModel/EquMonitorObj.h"
-#include "../xyModel/MonitorRoom.h"
-#include "../xyModel/MonitorPerson.h"
+#include "EquMonitorObj.h"
+#include "MonitorRoom.h"
+#include "MonitorPerson.h"
 #include <QGridLayout>
 #include <QLabel>
 #include <QListWidget>

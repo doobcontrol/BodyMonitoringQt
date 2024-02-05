@@ -4,7 +4,7 @@
 #include <QFormLayout>
 #include <QLineEdit>
 #include "frmAlertSet.h"
-#include "../xyModel/ConfigPars.h"
+#include "ConfigPars.h"
 
 frmAlertSet::frmAlertSet(QWidget *parent)
 : QMainWindow(parent){

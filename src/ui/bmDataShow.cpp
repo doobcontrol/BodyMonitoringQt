@@ -1,13 +1,14 @@
 
 #include "bmDataShow.h"
 #include "MonitorInfoPanel.h"
-#include "../xyModel/EquMonitorObj.h"
-#include "../xyModel/MonitorRoom.h"
-#include "../xyModel/MonitorPerson.h"
+#include "EquMonitorObj.h"
+#include "MonitorRoom.h"
+#include "MonitorPerson.h"
 #include "bmMainWin.h"
-#include "../xyModel/ConfigPars.h"
-#include "../xyModel/bmRecord.h"
-#include "../xyModel/bmRecordItem.h"
+#include "ConfigPars.h"
+#include "bmRecord.h"
+#include "bmRecordItem.h"
+#include <QFileDialog>
 
 bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     : QWidget(parent) {
@@ -280,8 +281,9 @@ void bmDataShow::startAlert(){
         movie->setScaledSize(QSize(w,h));
         alertLabel->setMovie (movie);
         
-        sound=new QSound(":/alerm.wav");
-        sound->setLoops(QSound::Infinite);
+        sound=new QSoundEffect(this);
+        sound->setSource(QUrl::fromLocalFile(":/alerm.wav"));
+        sound->setLoopCount(QSoundEffect::Infinite);
     }
     
     movie->start();   

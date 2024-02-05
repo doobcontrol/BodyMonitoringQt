@@ -1,9 +1,14 @@
 #pragma once
 #include <QWidget>
-#include <QtCharts>
-#include <QSound>
-
-using namespace QtCharts;
+#include <QChart>
+#include <QLineSeries>
+#include <QDateTimeAxis>
+#include <QValueAxis>
+#include <QChartView>
+#include <QLabel>
+#include <QGroupBox>
+#include <QSoundEffect>
+#include <QMovie>
 
 class bmDataShow : public QWidget  {
     Q_OBJECT
@@ -29,7 +34,7 @@ class bmDataShow : public QWidget  {
     QMap<QString, QString>* monitorRoom=nullptr;
     QMap<QString, QString>* monitorPerson=nullptr;
     QMovie *movie=nullptr;
-    QSound *sound=nullptr;
+    QSoundEffect *sound=nullptr;
     QString recordID;
 public:
     bmDataShow(QString bmID, QWidget *parent = nullptr);
