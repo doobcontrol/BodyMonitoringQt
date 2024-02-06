@@ -26,7 +26,6 @@ void dbHelper::init(QString workDb){
         qDebug() << QString("m_dbFile: %1").arg(m_dbFile);
         return;
     }
-    qDebug() << QString("m_dbFile: %1").arg(m_dbFile);
     
     if(isNewDbFile){    
     	//生成数据表    
