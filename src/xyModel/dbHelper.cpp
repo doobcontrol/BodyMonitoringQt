@@ -8,9 +8,9 @@ using namespace XyModel;
 QList<XyModel::XyBaseModel*> dbHelper::initXyBaseModelList;
 QSqlDatabase dbHelper::m_db;
 QString dbHelper::m_dbType="QSQLITE";
-QString dbHelper::m_dbFile="/usr/local/share/BodyMonitoring/bm.db";
-void dbHelper::init(){
-    
+QString dbHelper::m_dbFile="bm.db";
+void dbHelper::init(QString workDb){
+    m_dbFile=workDb;
     m_db = QSqlDatabase::addDatabase(m_dbType);
     m_db.setDatabaseName(m_dbFile);
     
@@ -23,7 +23,10 @@ void dbHelper::init(){
     if (!m_db.open())
     {
         qDebug() << "Error: connection with database failed";
+        qDebug() << QString("m_dbFile: %1").arg(m_dbFile);
+        return;
     }
+    qDebug() << QString("m_dbFile: %1").arg(m_dbFile);
     
     if(isNewDbFile){    
     	//生成数据表    

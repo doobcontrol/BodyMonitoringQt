@@ -7,7 +7,8 @@
 #include "frmAlertSet.h"
 #include <QDebug>
 
-QString bmMainWin::workDir="/usr/local/share/BodyMonitoring";
+QString bmMainWin::workDir="";
+QString bmMainWin::dataDir="";
 bmMainWin::bmMainWin(QWidget *parent)
     : QMainWindow(parent) {
     setWindowIcon(QIcon(":/Main.png"));//只对windows有效，在linux下无效

@@ -7,7 +7,7 @@ using namespace XyModel;
 
 class dbHelper {
 public:
-    static void init();
+    static void init(QString workDb);
     static QList<XyModel::XyBaseModel*> initXyBaseModelList;
     static void queryNoReturn(const QString& sqlStr);
     static QMap<QString, QString>* queryRecord(

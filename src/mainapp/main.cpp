@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QTextStream>
+#include <QDir>
 #include "bmMainWin.h"
 #include "dbHelper.h"
 #include "Equ.h"
@@ -26,6 +27,13 @@ int main(int argc, char *argv[]) {
         qDebug() << QString("加载汉化文件失败");
     }
     
+    QString workDir = QDir::homePath().append("/BodyMonitoringQt");
+    (new QDir(workDir))->mkpath(".");
+    bmMainWin::workDir=workDir;
+    bmMainWin::dataDir=workDir;
+    bmMainWin::dataDir.append(QString("/data"));
+    (new QDir(bmMainWin::dataDir))->mkpath(".");
+    
     dbHelper::initXyBaseModelList.append(Equ::get());
     dbHelper::initXyBaseModelList.append(ConfigPars::get());
     dbHelper::initXyBaseModelList.append(MonitorPerson::get());
@@ -33,7 +41,9 @@ int main(int argc, char *argv[]) {
     dbHelper::initXyBaseModelList.append(EquMonitorObj::get());
     dbHelper::initXyBaseModelList.append(bmRecord::get());
     dbHelper::initXyBaseModelList.append(bmRecordItem::get());
-    dbHelper::init();
+    QString dbFile=workDir;
+    dbFile.append(QString("/bm.db"));
+    dbHelper::init(dbFile);
     
     bmMainWin window;
     window.setWindowTitle("封闭式房间单人生命监测系统");

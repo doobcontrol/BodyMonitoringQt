@@ -210,7 +210,7 @@ void bmDataShow::showMonitorInfo(){
         if(monitorPerson!=nullptr){      
             PersonLabel->setText(QString("人员: %1").arg((*monitorPerson)[MonitorPerson::fPName]));
             
-            QString targetFile(bmMainWin::workDir);
+            QString targetFile(bmMainWin::dataDir);
             targetFile.append(QString("/%1").arg((*monitorPerson)[XyKModel::fID]));
             if(!QFile::exists(targetFile)){
                 targetFile=":/photoicon.png";
@@ -238,7 +238,7 @@ bool bmDataShow::eventFilter(QObject *watched, QEvent *event){
         if(fileName.isEmpty()){
             return true;
         }
-        QString targetFile(bmMainWin::workDir);
+        QString targetFile(bmMainWin::dataDir);
         targetFile.append(QString("/%1").arg((*monitorPerson)[XyKModel::fID]));
         if(QFile::exists(targetFile)){
             QFile::remove(targetFile);

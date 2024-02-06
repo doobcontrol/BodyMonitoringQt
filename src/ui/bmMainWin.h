@@ -16,6 +16,7 @@ class bmMainWin : public QMainWindow  {
     void closeEvent(QCloseEvent *event) override;
 public:
     static QString workDir;
+    static QString dataDir;
     bmMainWin(QWidget *parent = nullptr);
     enum BmStatusType {
         started = 0,
