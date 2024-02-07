@@ -30,5 +30,8 @@ void bmRecordItem::createFieldsList(){
     addAField("时间",fTimeID,DataType_text,"50","0"); 
     addAField("呼吸",fBreathe,DataType_text,"50","0");  
     addAField("心跳",fHeartRate,DataType_text,"50","0");   
-    ForeignKeyMap[fRecordID]=bmRecord::get()->getTableCode();
+    ForeignKeyMap[fRecordID]=bmRecord::get();//->getTableCode();
+}
+QList<QMap<QString, QString>>* bmRecordItem::selectItemByRecord(QString RecordID){
+    return selectByOneField(fRecordID, RecordID);
 }

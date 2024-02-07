@@ -1,5 +1,5 @@
 #include "xyTableModel.h"
-#include "../xyModel/XyKModel.h"
+#include "XyKModel.h"
 #include <QColor>
 #include <QDebug>
 

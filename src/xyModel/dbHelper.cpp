@@ -2,6 +2,8 @@
 #include <QFile>
 #include "dbHelper.h"
 #include <QSqlError>
+#include <QSqlRecord>
+#include <QSqlField>
 
 using namespace XyModel;
 
@@ -57,9 +59,7 @@ void dbHelper::queryNoReturn(const QString& sqlStr){
                  << query.lastError();
     }
 }
-QMap<QString, QString>* dbHelper::queryRecord(
-    const QString& sqlStr, 
-    const QList<QMap<QString, QString>>& FieldsList)
+QMap<QString, QString>* dbHelper::queryRecord(const QString& sqlStr)
 {
     QSqlQuery query;
     query.prepare(sqlStr);
@@ -69,8 +69,11 @@ QMap<QString, QString>* dbHelper::queryRecord(
         if(query.first())
         {    
             retQMap=new QMap<QString, QString>;
-            for(QMap<QString, QString> fQMap:FieldsList){           
-                retQMap->insert(fQMap[XyBaseModel::FieldCode], query.value(fQMap[XyBaseModel::FieldCode]).toString());
+            //debug fields infomation
+            QSqlRecord rec = query.record();
+            int recordCount = rec.count();
+            for(int i=0;i<recordCount;i++){
+                retQMap->insert(rec.field(i).name(), rec.value(i).toString());
             }
         }
     }
@@ -82,9 +85,7 @@ QMap<QString, QString>* dbHelper::queryRecord(
     }
     return retQMap;
 }
-QList<QMap<QString, QString>>* dbHelper::queryRecords(
-    const QString& sqlStr, 
-    const QList<QMap<QString, QString>>& FieldsList)
+QList<QMap<QString, QString>>* dbHelper::queryRecords(const QString& sqlStr)
 {
     QSqlQuery query;
     query.prepare(sqlStr);
@@ -93,12 +94,13 @@ QList<QMap<QString, QString>>* dbHelper::queryRecords(
     {
         while (query.next())
         {    
-            QMap<QString, QString> tQMap;    
-         
-            for(QMap<QString, QString> fQMap:FieldsList){           
-                tQMap[fQMap[XyBaseModel::FieldCode]]=query.value(fQMap[XyBaseModel::FieldCode]).toString();
+            //debug fields infomation
+            QSqlRecord rec = query.record();
+            int recordCount = rec.count();
+            QMap<QString, QString> tQMap;   
+            for(int i=0;i<recordCount;i++){
+                tQMap[rec.field(i).name()]=rec.value(i).toString(); 
             }
-    
             retList->append(tQMap);
         }
     }

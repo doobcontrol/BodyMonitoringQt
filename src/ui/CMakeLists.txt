@@ -4,6 +4,7 @@ qt_add_library(bmUi STATIC
     bmReader.cpp
     EquManageWin.cpp
     frmAlertSet.cpp
+    frmBmRecordList.cpp
     MonitorInfoPanel.cpp
     xyTableModel.cpp
     xyTableView.cpp
@@ -31,6 +32,7 @@ qt_add_resources(bmUi bmresources
         images/alerm.wav
         images/startrecord.png
         images/stoprecord.png
+        images/recordlist.png
         images/qtbase_zh_CN.qm
 )
 

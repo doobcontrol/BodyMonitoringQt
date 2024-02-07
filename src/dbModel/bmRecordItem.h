@@ -18,6 +18,7 @@ private:
 
 public:
     bmRecordItem();
+    QList<QMap<QString, QString>>* selectItemByRecord(QString RecordID); 
 protected:
     void createFieldsList();
 };

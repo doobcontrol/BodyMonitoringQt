@@ -1,5 +1,6 @@
 #pragma once
 #include "XyKModel.h"
+#include <QDate>
 
 using namespace XyModel;
 
@@ -19,6 +20,10 @@ private:
 
 public:
     bmRecord();
+    
+    //查询
+    QList<QMap<QString, QString>>* selectByStartDate(QDate startDate); 
+    
 protected:
     void createFieldsList();
 };

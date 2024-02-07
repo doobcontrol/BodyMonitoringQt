@@ -4,6 +4,20 @@
 
 namespace XyModel
 {
+//Include headers with crossed references
+class XyBaseModel;
+typedef class XyBaseModel XyBaseModel;
+}
+#include "XyKModel.h"
+
+namespace XyModel
+{
+
+struct LjInfo  
+{  
+    QString asStr; //addSelectString
+    QString ljStr; //leftJoinString
+};
 
 class XyBaseModel {
 //静态成员
@@ -22,15 +36,22 @@ private:
 //实例成员
 public:   
     QList<QMap<QString, QString>> FieldsList;
-    QMap<QString, QString> ForeignKeyMap;
+    QMap<QString, XyKModel*> ForeignKeyMap;
     QList<QMap<QString, QString>> InitRecordsList;
     void createTable();
     QString getTableCode();
     void createInitRecords();
     
     //查询
+    QString selectAllstr(); 
     QList<QMap<QString, QString>>* selectAll(); 
-       
+    QList<QMap<QString, QString>>* selectByWhereString(QString whereString); 
+    QString selectAllLjstr();
+    void createLjInfo(LjInfo& ljInfo);
+    QList<QMap<QString, QString>>* selectAllLj(); 
+    QList<QMap<QString, QString>>* selectAllLjByWhereString(QString whereString); 
+    QList<QMap<QString, QString>>* selectByOneField(QString fName, QString fValue); 
+    
     //新增
     void insertOne(const QMap<QString, QString>& recordMap);
     void insertRecordsList(const QList<QMap<QString, QString>>& RecordsList);

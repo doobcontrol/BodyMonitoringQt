@@ -77,7 +77,7 @@ void XyBaseModel::createTable(){
     for(QString key:ForeignKeyMap.keys()){    
     	fieldStr.append(QString(",  FOREIGN KEY(%1) REFERENCES %2(%3)")
     	    .arg(key)
-    	    .arg(ForeignKeyMap[key])
+    	    .arg(ForeignKeyMap[key]->getTableCode())
     	    .arg(XyKModel::fID)
     	    );
     }
@@ -90,11 +90,72 @@ void XyBaseModel::createInitRecords(){
     insertRecordsList(InitRecordsList);
 }
 
+//查询
+QString XyBaseModel::selectAllstr(){
+    return QString("SELECT * FROM %1").arg(tableCode);
+}
 QList<QMap<QString, QString>>* XyBaseModel::selectAll(){
-    QString sqlStr = QString("SELECT * FROM %1").arg(tableCode);
-    return dbHelper::queryRecords(sqlStr, FieldsList);
+    return dbHelper::queryRecords(selectAllstr());
+}
+QList<QMap<QString, QString>>* XyBaseModel::selectByWhereString(QString whereString){
+    QString sqlStr = QString("%1 WHERE %2").arg(selectAllstr()).arg(whereString);
+    return dbHelper::queryRecords(sqlStr);
+}
+QString XyBaseModel::selectAllLjstr(){
+    //tempSql += " select " + tableCode + ".*" + addSelectString + " from " + tableCode + leftJoinString;
+    LjInfo ljInfo;
+    createLjInfo(ljInfo);
+    QString sqlStr = QString("SELECT %1.* %2 FROM %1 %3")
+        .arg(tableCode)
+        .arg(ljInfo.asStr)
+        .arg(ljInfo.ljStr);
+    
+    return sqlStr;
+}
+void XyBaseModel::createLjInfo(LjInfo& ljInfo){
+    for(QString fieldCode:ForeignKeyMap.keys()){
+        QString leftJoinTablePro=QString("%1%2")
+                    .arg(ForeignKeyMap[fieldCode]->getTableCode())
+                    .arg(fieldCode);
+        QString addSelectString;
+        for(QMap<QString, QString> fMap:ForeignKeyMap[fieldCode]->FieldsList){
+            if(fMap[FieldCode]!=XyKModel::fID){
+                addSelectString.append(
+                    QString(",%1.%2  %3%2")
+                    .arg(leftJoinTablePro)
+                    .arg(fMap[FieldCode])
+                    .arg(fieldCode)
+                );
+            }
+        }
+        if(!addSelectString.isEmpty()){
+            ljInfo.asStr.append(addSelectString);
+            ljInfo.ljStr.append(QString(" left join %1 %2 on %3.%4=%2.%5")
+                .arg(ForeignKeyMap[fieldCode]->getTableCode())
+                .arg(leftJoinTablePro)
+                .arg(tableCode)    
+                .arg(fieldCode)     
+                .arg(XyKModel::fID)                
+            );
+        }
+    }
+}
+QList<QMap<QString, QString>>* XyBaseModel::selectAllLj(){
+    return dbHelper::queryRecords(selectAllLjstr());
+}
+QList<QMap<QString, QString>>* XyBaseModel::selectAllLjByWhereString(QString whereString){
+    QString sqlStr = QString("%1 WHERE %2").arg(selectAllLjstr()).arg(whereString);
+    return dbHelper::queryRecords(sqlStr);
+}
+QList<QMap<QString, QString>>* XyBaseModel::selectByOneField(QString fName, QString fValue){
+    QString whereString=QString("%1='%2'")
+        .arg(fName)
+        .arg(fValue)
+    ;
+    return selectByWhereString(whereString);
 }
 
+//新增
 void XyBaseModel::insertOne(const QMap<QString, QString>& recordMap){
    QString fieldsStr("");
    QString valuesStr("");

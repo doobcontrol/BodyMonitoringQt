@@ -27,6 +27,6 @@ void EquMonitorObj::createFieldsList(){
     XyKModel::createFieldsList();
     addAField("房间ID",fRoomID,DataType_text,"50","0");  
     addAField("人员ID",fPersonID,DataType_text,"50","0");  
-    ForeignKeyMap[fRoomID]=MonitorRoom::get()->getTableCode();
-    ForeignKeyMap[fPersonID]=MonitorPerson::get()->getTableCode();
+    ForeignKeyMap[fRoomID]=MonitorRoom::get();//->getTableCode();
+    ForeignKeyMap[fPersonID]=MonitorPerson::get();//->getTableCode();
 }

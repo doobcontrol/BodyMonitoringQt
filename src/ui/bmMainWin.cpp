@@ -5,6 +5,7 @@
 #include "bmMainWin.h"
 #include "EquManageWin.h"
 #include "frmAlertSet.h"
+#include "frmBmRecordList.h"
 #include <QDebug>
 
 QString bmMainWin::workDir="";
@@ -30,6 +31,9 @@ bmMainWin::bmMainWin(QWidget *parent)
     connect(tQAction, &QAction::triggered, this, &bmMainWin::openAlertSet);
     
     tempMenu = menuBar()->addMenu("查询统计");
+    tQAction = new QAction(QIcon(":/recordlist.png"),"监测记录", this);
+    tempMenu->addAction(tQAction);
+    connect(tQAction, &QAction::triggered, this, &bmMainWin::openBmRecordList);
     
     tempMenu = menuBar()->addMenu("退出");
     tQAction = new QAction(QIcon(":/Exit.png"),"退出", this);
@@ -155,8 +159,12 @@ void bmMainWin::openEquManage(){
     emw->show();
 }
 void bmMainWin::openAlertSet(){
-    frmAlertSet *emw=new frmAlertSet(this);    
-    emw->show();
+    frmAlertSet *tmw=new frmAlertSet(this);    
+    tmw->show();
+}
+void bmMainWin::openBmRecordList(){
+    frmBmRecordList *tmw=new frmBmRecordList(this);    
+    tmw->show();
 }
 void bmMainWin::showFull(const bmDataShow* askBm, const bool isFull){
     if(isFull){

@@ -18,7 +18,7 @@ void XyKModel::createFieldsList(){
 //查询
 QMap<QString, QString>* XyKModel::selectByPk(const QString& pk){
     QString sqlStr = QString("SELECT * FROM %1 where %2='%3'").arg(tableCode).arg(fID).arg(pk);
-    return dbHelper::queryRecord(sqlStr, FieldsList);
+    return dbHelper::queryRecord(sqlStr);
 }
 
 //新增

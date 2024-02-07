@@ -33,8 +33,22 @@ void bmRecord::createFieldsList(){
     addAField("房间ID",fRoomID,DataType_text,"50","0");  
     addAField("人员ID",fPersonID,DataType_text,"50","0");  
     addAField("开始时间",fStartTimeID,DataType_text,"50","0");  
-    addAField("人员ID",fStopTimeID,DataType_text,"50","0");  
-    ForeignKeyMap[fEquID]=EquMonitorObj::get()->getTableCode();
-    ForeignKeyMap[fRoomID]=MonitorRoom::get()->getTableCode();
-    ForeignKeyMap[fPersonID]=MonitorPerson::get()->getTableCode();
+    addAField("结束时间",fStopTimeID,DataType_text,"50","0");  
+    ForeignKeyMap[fEquID]=EquMonitorObj::get();//->getTableCode();
+    ForeignKeyMap[fRoomID]=MonitorRoom::get();//->getTableCode();
+    ForeignKeyMap[fPersonID]=MonitorPerson::get();//->getTableCode();
 }
+
+//查询
+QList<QMap<QString, QString>>* bmRecord::selectByStartDate(QDate startDate){
+    QString startTimeString=QString("%1 00:00:0.000").arg(startDate.toString("yyyy-MM-dd"));
+    QString endTimeString=QString("%1 00:00:0.000").arg((startDate.addDays(1)).toString("yyyy-MM-dd"));
+    QString whereString=QString("%1>='%2' AND %3<='%4'")
+        .arg(fStartTimeID)
+        .arg(startTimeString)
+        .arg(fStartTimeID)
+        .arg(endTimeString)
+    ;
+    
+    return selectAllLjByWhereString(whereString);
+} 

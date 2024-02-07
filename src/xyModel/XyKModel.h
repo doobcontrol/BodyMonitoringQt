@@ -1,5 +1,13 @@
 #pragma once
+
+namespace XyModel
+{
+//Include headers with crossed references
+class XyKModel;
+typedef class XyKModel XyKModel;
+}
 #include "XyBaseModel.h"
+
 namespace XyModel
 {
 
