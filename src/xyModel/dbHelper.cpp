@@ -69,7 +69,6 @@ QMap<QString, QString>* dbHelper::queryRecord(const QString& sqlStr)
         if(query.first())
         {    
             retQMap=new QMap<QString, QString>;
-            //debug fields infomation
             QSqlRecord rec = query.record();
             int recordCount = rec.count();
             for(int i=0;i<recordCount;i++){
@@ -94,7 +93,6 @@ QList<QMap<QString, QString>>* dbHelper::queryRecords(const QString& sqlStr)
     {
         while (query.next())
         {    
-            //debug fields infomation
             QSqlRecord rec = query.record();
             int recordCount = rec.count();
             QMap<QString, QString> tQMap;   

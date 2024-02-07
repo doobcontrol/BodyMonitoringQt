@@ -34,9 +34,9 @@ void bmRecord::createFieldsList(){
     addAField("人员ID",fPersonID,DataType_text,"50","0");  
     addAField("开始时间",fStartTimeID,DataType_text,"50","0");  
     addAField("结束时间",fStopTimeID,DataType_text,"50","0");  
-    ForeignKeyMap[fEquID]=EquMonitorObj::get();//->getTableCode();
-    ForeignKeyMap[fRoomID]=MonitorRoom::get();//->getTableCode();
-    ForeignKeyMap[fPersonID]=MonitorPerson::get();//->getTableCode();
+    ForeignKeyMap[fEquID]=EquMonitorObj::get();
+    ForeignKeyMap[fRoomID]=MonitorRoom::get();
+    ForeignKeyMap[fPersonID]=MonitorPerson::get();
 }
 
 //查询
