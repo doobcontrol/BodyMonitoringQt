@@ -1,4 +1,4 @@
-#include "MonitorInfoPanel.h"
+#include "frmMonitorInfoSet.h"
 #include "EquMonitorObj.h"
 #include "MonitorRoom.h"
 #include "MonitorPerson.h"
@@ -8,13 +8,14 @@
 #include <QPushButton>
 #include <QMessageBox>
 
-MonitorInfoPanel::MonitorInfoPanel(QString bmID, QWidget *parent)
+frmMonitorInfoSet::frmMonitorInfoSet(QString bmID, QWidget *parent)
     : QMainWindow(parent) {   
     this->bmID=bmID;
     getMonitorInfo();
     setWindowTitle("配置监测目标"); 
     setWindowIcon(QIcon(":/monitorobj.png"));//只对windows有效，在linux下无效
     resize(400, 300);
+    setWindowFlags(Qt::Dialog);
     setWindowModality(Qt::ApplicationModal);  
     
     int rowCount=0;
@@ -34,7 +35,7 @@ MonitorInfoPanel::MonitorInfoPanel(QString bmID, QWidget *parent)
     for(QMap<QString, QString> roomRow:(*roomRowList)){
         new QListWidgetItem(roomRow[MonitorRoom::fRoomCode], roomlistWidget);
     }
-    connect(roomlistWidget, &QListWidget::itemSelectionChanged, this, &MonitorInfoPanel::setRoomFromList);
+    connect(roomlistWidget, &QListWidget::itemSelectionChanged, this, &frmMonitorInfoSet::setRoomFromList);
     
     rowCount++;
     gridLayout->addWidget(new QLabel("姓名："),rowCount,0,1,1);
@@ -47,7 +48,7 @@ MonitorInfoPanel::MonitorInfoPanel(QString bmID, QWidget *parent)
     for(QMap<QString, QString> personRow:(*personRowList)){
         new QListWidgetItem(personRow[MonitorPerson::fPName], namelistWidget);
     }
-    connect(namelistWidget, &QListWidget::itemSelectionChanged, this, &MonitorInfoPanel::setPersonFromList);
+    connect(namelistWidget, &QListWidget::itemSelectionChanged, this, &frmMonitorInfoSet::setPersonFromList);
     
     auto *vbox = new QVBoxLayout();
     vbox->addItem(gridLayout);
@@ -57,7 +58,7 @@ MonitorInfoPanel::MonitorInfoPanel(QString bmID, QWidget *parent)
     auto *hbox = new QHBoxLayout();
     hbox->addStretch(1);
     tQpb=new QPushButton("确定");
-    connect(tQpb, &QPushButton::released, this, &MonitorInfoPanel::saveSelection);
+    connect(tQpb, &QPushButton::released, this, &frmMonitorInfoSet::saveSelection);
     hbox->addWidget(tQpb);
     tQpb=new QPushButton("取消");
     connect(tQpb, &QPushButton::released, this, &QMainWindow::close);
@@ -69,7 +70,7 @@ MonitorInfoPanel::MonitorInfoPanel(QString bmID, QWidget *parent)
     mainWidget->setLayout(vbox);
     setCentralWidget(mainWidget);
 }
-void MonitorInfoPanel::getMonitorInfo(){    
+void frmMonitorInfoSet::getMonitorInfo(){    
     //查询 监测对象配置表 若有记录，配置当前监测房间，人员
     equMonitorObj = EquMonitorObj::get()->selectByPk(bmID);
     if(equMonitorObj!=nullptr){
@@ -83,7 +84,7 @@ void MonitorInfoPanel::getMonitorInfo(){
         }
     }
 }
-void MonitorInfoPanel::saveSelection(){
+void frmMonitorInfoSet::saveSelection(){
     if(roomIDEdit.text().trimmed()=="" || personNameEdit.text().trimmed()==""){
         QMessageBox::critical(this, QString("出错"), QString("房间和姓名均不能为空"));
         return;
@@ -133,9 +134,9 @@ void MonitorInfoPanel::saveSelection(){
     emit ok();
     close();
 }
-void MonitorInfoPanel::setRoomFromList(){
+void frmMonitorInfoSet::setRoomFromList(){
     roomIDEdit.setText(roomlistWidget->currentItem()->text());
 }
-void MonitorInfoPanel::setPersonFromList(){
+void frmMonitorInfoSet::setPersonFromList(){
     personNameEdit.setText(namelistWidget->currentItem()->text());
 }

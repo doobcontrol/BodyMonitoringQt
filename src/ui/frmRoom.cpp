@@ -1,36 +1,35 @@
-
+#include "MonitorRoom.h"
 #include <QIcon>
 #include <QToolBar>
 #include <QVBoxLayout>
 #include <QTableView>
-#include "Equ.h"
 #include <QDebug>
-#include "EquManageWin.h"
+#include "frmRoom.h"
 #include <QMessageBox>
 
-EquManageWin::EquManageWin(QWidget *parent)
+frmRoom::frmRoom(QWidget *parent)
 : QMainWindow(parent){
     setWindowTitle("房间管理");
-    setWindowIcon(QIcon(":/House.png"));//只对windows有效，在linux下无效
-    resize(400, 300);
+    setWindowIcon(QIcon(":/House.png"));
+    setFixedSize(400, 300);
+    setWindowFlags(Qt::Dialog);
+    this->setWindowModality(Qt::ApplicationModal); 
     
     QAction *tAction;
     
     QToolBar *toolbar = addToolBar("main toolbar");
     tAction = toolbar->addAction(QIcon(":/New.png"), "新增");
-    connect(tAction, &QAction::triggered, this, &EquManageWin::AddEqu);
+    connect(tAction, &QAction::triggered, this, &frmRoom::AddRoom);
     tAction = toolbar->addAction(QIcon(":/Edit.png"), "修改");
-    connect(tAction, &QAction::triggered, this, &EquManageWin::EditEqu);
+    connect(tAction, &QAction::triggered, this, &frmRoom::EditRoom);
     tAction = toolbar->addAction(QIcon(":/Delete.png"), "删除");
-    connect(tAction, &QAction::triggered, this, &EquManageWin::DeleteEqu);
-    this->setWindowModality(Qt::ApplicationModal); 
+    connect(tAction, &QAction::triggered, this, &frmRoom::DeleteRoom);
     
     QList<QString>* showFields=new QList<QString>;
-    showFields->append(Equ::fEquRoom);
-    showFields->append(Equ::fEquID);
+    showFields->append(MonitorRoom::fRoomCode);
     model = new xyTableModel(
-        Equ::get()->selectAll(), 
-        &Equ::get()->FieldsList, 
+        MonitorRoom::get()->selectAll(), 
+        &MonitorRoom::get()->FieldsList, 
         showFields,
         this);
     
@@ -41,18 +40,18 @@ EquManageWin::EquManageWin(QWidget *parent)
     
     tableView->setModel(model);    
     
-    connect(model, &xyTableModel::editCompleted, this, &EquManageWin::UpdateEqu);
+    connect(model, &xyTableModel::editCompleted, this, &frmRoom::UpdateRoom);
 }
-void EquManageWin::AddEqu(){
-    QString newRecordID = Equ::get()->newRecord();
-    model->addRows(*Equ::get()->selectByPk(newRecordID));
+void frmRoom::AddRoom(){
+    QString newRecordID = MonitorRoom::get()->newRecord();
+    model->addRows(*MonitorRoom::get()->selectByPk(newRecordID));
     tableView->selectRow(0);
     // Start editing the cell
     tableView->setCurrentIndex(model->index(0,0));
     tableView->edit(model->index(0,0));
 }
 
-void EquManageWin::EditEqu(){
+void frmRoom::EditRoom(){
     if(tableView->inEditing()){
         return;
     }
@@ -65,7 +64,7 @@ void EquManageWin::EditEqu(){
     tableView->setCurrentIndex(model->index(rowInt,0));
     tableView->edit(model->index(rowInt,0));
 }
-void EquManageWin::DeleteEqu(){
+void frmRoom::DeleteRoom(){
     QList<QModelIndex> selectedRowsList = tableView->selectionModel()->selectedRows();
     if(selectedRowsList.count()==0){
         QMessageBox::critical(this, QString("出错"), QString("请选择要删除的项"));
@@ -77,17 +76,17 @@ void EquManageWin::DeleteEqu(){
     //删除确认
     QMessageBox::StandardButton retButton = QMessageBox::question(this, 
         QString("删除确认"), 
-        QString("确定要删除房间：%1 吗?").arg(rowMap[Equ::fEquRoom]), 
+        QString("确定要删除房间：%1 吗?").arg(rowMap[MonitorRoom::fRoomCode]), 
         QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No), 
         QMessageBox::NoButton);
     if(retButton!=QMessageBox::Yes){
         return;
     }
     
-    Equ::get()->deleteByRow(rowMap);
+    MonitorRoom::get()->deleteByRow(rowMap);
     model->RowList->removeAt(rowInt);
     model->removeRows(rowInt, 1);
 }
-void EquManageWin::UpdateEqu(const QMap<QString, QString> recordMap, const QMap<QString, QString> fieldMap){
-    Equ::get()->updateByRowColumn(recordMap,fieldMap);
+void frmRoom::UpdateRoom(const QMap<QString, QString> recordMap, const QMap<QString, QString> fieldMap){
+    MonitorRoom::get()->updateByRowColumn(recordMap,fieldMap);
 }

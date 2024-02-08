@@ -3,7 +3,7 @@
 #include <QMenuBar>
 #include <QStatusBar>
 #include "bmMainWin.h"
-#include "EquManageWin.h"
+#include "frmRoom.h"
 #include "frmAlertSet.h"
 #include "frmBmRecordList.h"
 #include <QDebug>
@@ -20,10 +20,10 @@ bmMainWin::bmMainWin(QWidget *parent)
     
     tempMenu = menuBar()->addMenu("人员管理");
     
-    tempMenu = menuBar()->addMenu("设备管理");
-    tQAction = new QAction(QIcon(":/House.png"),"设备管理", this);
+    tempMenu = menuBar()->addMenu("房间管理");
+    tQAction = new QAction(QIcon(":/House.png"),"房间管理", this);
     tempMenu->addAction(tQAction);
-    connect(tQAction, &QAction::triggered, this, &bmMainWin::openEquManage);
+    connect(tQAction, &QAction::triggered, this, &bmMainWin::openRoomManage);
     
     tempMenu = menuBar()->addMenu("系统管理");
     tQAction = new QAction(QIcon(":/alertset.png"),"报警参数", this);
@@ -154,9 +154,9 @@ void bmMainWin::bmStartStatus(startBmStatus targetStatus){
     }
     m_startBmStatus=targetStatus; 
 }
-void bmMainWin::openEquManage(){
-    EquManageWin *emw=new EquManageWin(this);    
-    emw->show();
+void bmMainWin::openRoomManage(){
+    frmRoom *tmw=new frmRoom(this);    
+    tmw->show();
 }
 void bmMainWin::openAlertSet(){
     frmAlertSet *tmw=new frmAlertSet(this);    

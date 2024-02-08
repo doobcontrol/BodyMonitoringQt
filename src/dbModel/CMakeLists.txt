@@ -2,7 +2,6 @@ qt_add_library(bmDbModel STATIC
     bmRecord.cpp
     bmRecordItem.cpp
     ConfigPars.cpp
-    Equ.cpp
     EquMonitorObj.cpp
     MonitorPerson.cpp
     MonitorRoom.cpp

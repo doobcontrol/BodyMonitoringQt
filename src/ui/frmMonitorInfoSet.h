@@ -5,7 +5,7 @@
 #include <QList>
 #include <QMap>
 
-class MonitorInfoPanel : public QMainWindow  {
+class frmMonitorInfoSet : public QMainWindow  {
     Q_OBJECT
     QString bmID;
     QMap<QString, QString>* equMonitorObj=nullptr;
@@ -19,7 +19,7 @@ class MonitorInfoPanel : public QMainWindow  {
     QList<QMap<QString, QString>>* roomRowList;
     QList<QMap<QString, QString>>* personRowList;
 public:
-    MonitorInfoPanel(QString bmID, QWidget *parent = nullptr);
+    frmMonitorInfoSet(QString bmID, QWidget *parent = nullptr);
 public slots:
     void saveSelection();
     void setRoomFromList();

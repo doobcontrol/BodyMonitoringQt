@@ -8,12 +8,13 @@
 #include <QHeaderView>
 
 frmBmRecordList::frmBmRecordList(QWidget *parent)
-    : QWidget(parent)
+    : QMainWindow(parent)
 {
     setWindowTitle("监测记录");
-    setWindowIcon(QIcon(":/recordlist.png"));//只对windows有效，在linux下无效
+    setWindowIcon(QIcon(":/recordlist.png"));
     setFixedSize(1000, 600);
     setWindowFlags(Qt::Dialog);
+    setWindowModality(Qt::ApplicationModal); 
 
     createQueryGroupBox();
     
@@ -43,7 +44,8 @@ frmBmRecordList::frmBmRecordList(QWidget *parent)
     itemTable->horizontalHeader()->setStretchLastSection(true);
     hLayout->addWidget(itemTable,1);   
      
-    setLayout(hLayout);    
+    setCentralWidget(new QWidget);
+    centralWidget()->setLayout(hLayout);    
     
     getRecords();
 }

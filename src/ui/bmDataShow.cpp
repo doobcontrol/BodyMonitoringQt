@@ -1,6 +1,6 @@
 
 #include "bmDataShow.h"
-#include "MonitorInfoPanel.h"
+#include "frmMonitorInfoSet.h"
 #include "EquMonitorObj.h"
 #include "MonitorRoom.h"
 #include "MonitorPerson.h"
@@ -193,8 +193,8 @@ void bmDataShow::recordData(){
     inRecord=(!inRecord);
 }
 void bmDataShow::setMonitorInfo(){
-    MonitorInfoPanel *mip=new MonitorInfoPanel(bmID,this);    
-    connect(mip, &MonitorInfoPanel::ok, this, &bmDataShow::showMonitorInfo);
+    frmMonitorInfoSet *mip=new frmMonitorInfoSet(bmID,this);    
+    connect(mip, &frmMonitorInfoSet::ok, this, &bmDataShow::showMonitorInfo);
     mip->show();
 }
 void bmDataShow::showMonitorInfo(){    

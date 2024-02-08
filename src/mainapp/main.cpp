@@ -3,7 +3,6 @@
 #include <QDir>
 #include "bmMainWin.h"
 #include "dbHelper.h"
-#include "Equ.h"
 #include "ConfigPars.h"
 #include "MonitorPerson.h"
 #include "MonitorRoom.h"
@@ -34,7 +33,6 @@ int main(int argc, char *argv[]) {
     bmMainWin::dataDir.append(QString("/data"));
     (new QDir(bmMainWin::dataDir))->mkpath(".");
     
-    dbHelper::initXyBaseModelList.append(Equ::get());
     dbHelper::initXyBaseModelList.append(ConfigPars::get());
     dbHelper::initXyBaseModelList.append(MonitorPerson::get());
     dbHelper::initXyBaseModelList.append(MonitorRoom::get());

@@ -11,16 +11,8 @@ frmAlertSet::frmAlertSet(QWidget *parent)
     setWindowTitle("报警参数");
     setWindowIcon(QIcon(":/alertset.png"));//只对windows有效，在linux下无效
     setFixedSize(300, 150);
+    setWindowFlags(Qt::Dialog);
     setWindowModality(Qt::ApplicationModal); 
-    
-    /*
-    QAction *tAction;    
-    QToolBar *toolbar = addToolBar("main toolbar");
-    tAction = toolbar->addAction(QIcon(":/New.png"), "新增");
-    connect(tAction, &QAction::triggered, this, &EquManageWin::AddEqu);
-    tAction = toolbar->addAction(QIcon(":/Edit.png"), "修改");
-    connect(tAction, &QAction::triggered, this, &EquManageWin::EditEqu);
-    */    
     
     QLineEdit* tempEdit=nullptr;
     QFormLayout *formLayout = new QFormLayout();

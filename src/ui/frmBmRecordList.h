@@ -1,12 +1,12 @@
 #pragma once
-#include <QWidget>
+#include <QMainWindow>
 #include <QCalendarWidget>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QComboBox>
 #include <QTableWidget>
 
-class frmBmRecordList : public QWidget
+class frmBmRecordList : public QMainWindow
 {
     Q_OBJECT
 

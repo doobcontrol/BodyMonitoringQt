@@ -2,10 +2,10 @@ qt_add_library(bmUi STATIC
     bmDataShow.cpp
     bmMainWin.cpp
     bmReader.cpp
-    EquManageWin.cpp
+    frmRoom.cpp
     frmAlertSet.cpp
     frmBmRecordList.cpp
-    MonitorInfoPanel.cpp
+    frmMonitorInfoSet.cpp
     xyTableModel.cpp
     xyTableView.cpp
 )
