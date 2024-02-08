@@ -47,6 +47,7 @@ frmPerson::frmPerson(QWidget *parent)
     
     PhotoLabel=new QLabel();
     PhotoLabel->resize(150,200);
+    PhotoLabel->setToolTip("双击设置人员照片");
     PhotoLabel->installEventFilter(this);//加事件过滤器以接收双击事件     
     PhotoLabel->setVisible(false);
     hLayout->addWidget(PhotoLabel,0);   
