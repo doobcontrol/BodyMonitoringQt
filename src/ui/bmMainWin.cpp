@@ -4,6 +4,7 @@
 #include <QStatusBar>
 #include "bmMainWin.h"
 #include "frmRoom.h"
+#include "frmPerson.h"
 #include "frmAlertSet.h"
 #include "frmBmRecordList.h"
 #include <QDebug>
@@ -19,6 +20,9 @@ bmMainWin::bmMainWin(QWidget *parent)
     QMenu *tempMenu=nullptr;
     
     tempMenu = menuBar()->addMenu("人员管理");
+    tQAction = new QAction(QIcon(":/monitorobj.png"),"人员管理", this);
+    tempMenu->addAction(tQAction);
+    connect(tQAction, &QAction::triggered, this, &bmMainWin::openPersonManage);
     
     tempMenu = menuBar()->addMenu("房间管理");
     tQAction = new QAction(QIcon(":/House.png"),"房间管理", this);
@@ -156,6 +160,10 @@ void bmMainWin::bmStartStatus(startBmStatus targetStatus){
 }
 void bmMainWin::openRoomManage(){
     frmRoom *tmw=new frmRoom(this);    
+    tmw->show();
+}
+void bmMainWin::openPersonManage(){
+    frmPerson *tmw=new frmPerson(this);    
     tmw->show();
 }
 void bmMainWin::openAlertSet(){

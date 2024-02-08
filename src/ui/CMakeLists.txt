@@ -2,6 +2,7 @@ qt_add_library(bmUi STATIC
     bmDataShow.cpp
     bmMainWin.cpp
     bmReader.cpp
+    frmPerson.cpp
     frmRoom.cpp
     frmAlertSet.cpp
     frmBmRecordList.cpp

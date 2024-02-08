@@ -40,6 +40,7 @@ public slots:
     void loadMovieFrameChanged_Handler(int frameNumber);
     void bmStop();
     void openRoomManage();
+    void openPersonManage();
     void openAlertSet();
     void openBmRecordList();
     void showFull(const bmDataShow* askBm,const bool isFull);
