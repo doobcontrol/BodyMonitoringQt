@@ -38,7 +38,7 @@ frmBmRecordList::frmBmRecordList(QWidget *parent)
     itemTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     itemTable->setSelectionMode(QAbstractItemView::SingleSelection);
     itemTable->setColumnCount(3);
-    QStringList itemTableHeaderLabels = { "时间", "呼吸", "心跳" };
+    QStringList itemTableHeaderLabels = { "时间", "心跳", "呼吸" };
     itemTable->setHorizontalHeaderLabels(itemTableHeaderLabels);
     itemTable->horizontalHeader()->setStretchLastSection(true);
     hLayout->addWidget(itemTable,1);   
