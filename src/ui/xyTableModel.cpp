@@ -56,8 +56,9 @@ bool xyTableModel::insertRows(int row, int count, const QModelIndex & parent)
     return true;
 }
 void xyTableModel::addRows(QMap<QString, QString> rowMap){
-    beginInsertRows(QModelIndex(), 0, 0);
-    RowList->insert(0, rowMap);
+    int rowCount=RowList->count();
+    RowList->append(rowMap);
+    beginInsertRows(QModelIndex(), rowCount, rowCount);
     endInsertRows();
 }
 bool xyTableModel::removeRows(int row, int count, const QModelIndex & parent)

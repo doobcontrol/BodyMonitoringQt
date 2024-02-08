@@ -44,11 +44,12 @@ frmRoom::frmRoom(QWidget *parent)
 }
 void frmRoom::AddRoom(){
     QString newRecordID = MonitorRoom::get()->newRecord();
+    int row=model->RowList->count();
     model->addRows(*MonitorRoom::get()->selectByPk(newRecordID));
-    tableView->selectRow(0);
+    tableView->selectRow(row);
     // Start editing the cell
-    tableView->setCurrentIndex(model->index(0,0));
-    tableView->edit(model->index(0,0));
+    tableView->setCurrentIndex(model->index(row,0));
+    tableView->edit(model->index(row,0));
 }
 
 void frmRoom::EditRoom(){
