@@ -22,7 +22,7 @@ bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     connect(tagFullScreen, &QAction::triggered, this, &bmDataShow::showFull);
     record = toolbar->addAction(QIcon(":/startrecord.png"), "点击录制当前数据");
     connect(record, &QAction::triggered, this, &bmDataShow::recordData);
-    QAction *setMonitorobj = toolbar->addAction(QIcon(":/monitorobj.png"), "配置监测目标");
+    setMonitorobj = toolbar->addAction(QIcon(":/monitorobj.png"), "配置监测目标");
     connect(setMonitorobj, &QAction::triggered, this, &bmDataShow::setMonitorInfo);
     
     chart = new QChart();
@@ -185,10 +185,14 @@ void bmDataShow::recordData(){
     	
         record->setIcon(QIcon(":/stoprecord.png")); 
 	record->setText(QString("数据录制中，点击停止"));	
+			
+	setMonitorobj->setEnabled(false);
     }
     else{
         record->setIcon(QIcon(":/startrecord.png")); 
-	record->setText(QString("点击录制当前数据"));	
+	record->setText(QString("点击录制当前数据"));
+			
+	setMonitorobj->setEnabled(true);	
     }
     inRecord=(!inRecord);
 }

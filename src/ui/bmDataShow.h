@@ -23,6 +23,7 @@ class bmDataShow : public QWidget  {
     bool inRecord=false;
     QAction *tagFullScreen;
     QAction *record;
+    QAction *setMonitorobj;
     QLabel* BreatheLabel;
     QLabel* HeartRateLabel;
     QGroupBox *MonitorObjGroupBox;
