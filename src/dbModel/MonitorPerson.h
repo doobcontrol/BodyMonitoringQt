@@ -16,6 +16,8 @@ private:
 
 public:
     MonitorPerson();
+    void deletePerson(const QString& pk);
+    void deletePerson(const QMap<QString, QString> recordMap);
 protected:
     void createFieldsList();
 };

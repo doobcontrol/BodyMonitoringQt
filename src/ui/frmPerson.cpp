@@ -1,11 +1,14 @@
 #include "frmPerson.h"
 #include "MonitorPerson.h"
+#include "bmMainWin.h"
 #include <QIcon>
 #include <QToolBar>
 #include <QVBoxLayout>
 #include <QTableView>
 #include <QDebug>
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QFile>
 
 frmPerson::frmPerson(QWidget *parent)
 : QMainWindow(parent){
@@ -36,9 +39,21 @@ frmPerson::frmPerson(QWidget *parent)
     tableView = new xyTableView;    
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableView->setSelectionMode(QAbstractItemView::SingleSelection);
-    setCentralWidget(tableView);
+    tableView->setModel(model);
+    connect(tableView->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &frmPerson::handlerRowChanged);
     
-    tableView->setModel(model);    
+    QHBoxLayout *hLayout=new QHBoxLayout;    
+    hLayout->addWidget(tableView,1);   
+    
+    PhotoLabel=new QLabel();
+    PhotoLabel->resize(150,200);
+    PhotoLabel->installEventFilter(this);//加事件过滤器以接收双击事件     
+    PhotoLabel->setVisible(false);
+    hLayout->addWidget(PhotoLabel,0);   
+     
+    setCentralWidget(new QWidget);
+    centralWidget()->setLayout(hLayout);
+        
     
     connect(model, &xyTableModel::editCompleted, this, &frmPerson::UpdatePerson);
 }
@@ -83,10 +98,75 @@ void frmPerson::DeletePerson(){
         return;
     }
     
-    MonitorPerson::get()->deleteByRow(rowMap);
+    QString persionID=rowMap[XyKModel::fID];
+    MonitorPerson::get()->deletePerson(persionID);
+    
+    //删除照片。原设计在MonitorPerson中删除照片。但目前简化编程，只有以fID为名的文件名，无路径，因此暂在此处删除  
+    QString targetFile(bmMainWin::dataDir);
+    targetFile.append(QString("/%1").arg(persionID));
+    if(QFile::exists(targetFile)){
+        QFile::remove(targetFile);
+    }
+    
     model->RowList->removeAt(rowInt);
     model->removeRows(rowInt, 1);
 }
 void frmPerson::UpdatePerson(const QMap<QString, QString> recordMap, const QMap<QString, QString> fieldMap){
     MonitorPerson::get()->updateByRowColumn(recordMap,fieldMap);
+}
+bool frmPerson::eventFilter(QObject *watched, QEvent *event){
+    if(qobject_cast<QLabel*>(watched) == PhotoLabel && event->type() == QEvent::MouseButtonDblClick)
+    {
+        QList<QModelIndex> selectedRowsList = tableView->selectionModel()->selectedRows();
+        if(selectedRowsList.count()==0){
+            QMessageBox::critical(this, QString("出错"), QString("请选择人员"));
+            return true;
+        }
+        int rowInt=selectedRowsList[0].row();
+        QMap<QString, QString> rowMap = (*(model->RowList))[rowInt];
+        
+        QString fileName = QFileDialog::getOpenFileName(this,
+            tr("选择照片"), "/home", tr("照片文件 (*.png *.jpg *.bmp)"));    
+        if(fileName.isEmpty()){
+            return true;
+        }
+        QString targetFile(bmMainWin::dataDir);
+        targetFile.append(QString("/%1").arg(rowMap[XyKModel::fID]));
+        if(QFile::exists(targetFile)){
+            QFile::remove(targetFile);
+        }
+        QFile::copy(fileName,targetFile);
+        
+        QPixmap pm(targetFile);
+        // get label dimensions
+        int w = 150;//PhotoLabel->width();
+        int h = 200;//PhotoLabel->height();
+        // set a scaled pixmap to a w x h window keeping its aspect ratio 
+        PhotoLabel->setPixmap(pm.scaled(w,h,Qt::KeepAspectRatio));
+                    
+        return true;
+    }
+    return false;
+}
+void frmPerson::handlerRowChanged(const QModelIndex &current, const QModelIndex &previous){
+    int row=current.row();
+    if(selectedRecordIndex!=row){        
+        QMap<QString, QString> rowMap = (*(model->RowList))[row];
+        QString targetFile(bmMainWin::dataDir);
+        targetFile.append(QString("/%1").arg(rowMap[XyKModel::fID]));
+        if(!QFile::exists(targetFile)){
+            targetFile=":/photoicon.png";
+        }
+            
+        QPixmap pm(targetFile);
+        // get label dimensions
+        int w = 150;//PhotoLabel->width();
+        int h = 200;//PhotoLabel->height();
+        // set a scaled pixmap to a w x h window keeping its aspect ratio 
+        PhotoLabel->setPixmap(pm.scaled(w,h,Qt::KeepAspectRatio));
+    
+        selectedRecordIndex=row;          
+        PhotoLabel->setVisible(false);
+        PhotoLabel->show();
+    }
 }
