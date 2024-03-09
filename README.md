@@ -38,6 +38,6 @@ cmake --install .
 cpack -G DEB  
 4，开发机环境升级到QT6后程序被自动配置使用wayland，但窗口无边框（安装到目标机没问题），没有搜索到好的解决方案。在开发机上手工进行如下设置可临时解决（每次新开命令窗口均需运行）：  
 export QT_QPA_PLATFORM=xcb  
-5，使用cpack打包后的安装包没有自动把用户加入dialout组，因此暂需要手动加入
-sudo usermod -aG currUsername aaaabbbbcccc
-加入后需要重启系统才能生效
+5，使用cpack打包后的安装包没有自动把用户加入dialout组，因此暂需要手动加入  
+sudo usermod -aG currUsername aaaabbbbcccc  
+加入后需要重启系统才能生效  
