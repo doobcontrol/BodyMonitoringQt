@@ -11,9 +11,30 @@
 #include "bmRecordItem.h"
 #include <QTranslator>
 #include <QDebug>
+#include <QFile>
+#include <QtGlobal>
+
+void myMessageHandler(QtMsgType type, const QMessageLogContext &, const QString & str);
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+    
+    QString workDir = QDir::homePath().append("/BodyMonitoringQt");
+    (new QDir(workDir))->mkpath(".");
+    bmMainWin::workDir=workDir;
+    bmMainWin::dataDir=workDir;
+    bmMainWin::dataDir.append(QString("/data"));
+    (new QDir(bmMainWin::dataDir))->mkpath(".");
+    
+    QString outFileStr(bmMainWin::workDir);
+    outFileStr.append(QString("/log"));    
+    QFile outFile(outFileStr);
+    if(outFile.exists()){
+        outFile.remove();
+    }
+    
+    qInstallMessageHandler(myMessageHandler);	
+    qDebug() << QString("程序启动");
     
     //加载Qt标准对话框的中文翻译文件 (摘自网络)
     //可从安装目录拷贝：/usr/share/qt5/translations/qtbase_zh_CN.qm
@@ -25,13 +46,6 @@ int main(int argc, char *argv[]) {
     else{    
         qDebug() << QString("加载汉化文件失败");
     }
-    
-    QString workDir = QDir::homePath().append("/BodyMonitoringQt");
-    (new QDir(workDir))->mkpath(".");
-    bmMainWin::workDir=workDir;
-    bmMainWin::dataDir=workDir;
-    bmMainWin::dataDir.append(QString("/data"));
-    (new QDir(bmMainWin::dataDir))->mkpath(".");
     
     dbHelper::initXyBaseModelList.append(ConfigPars::get());
     dbHelper::initXyBaseModelList.append(MonitorPerson::get());
@@ -47,5 +61,37 @@ int main(int argc, char *argv[]) {
     window.setWindowTitle("封闭式房间单人生命监测系统");
     window.show();
     
-  return app.exec();
+    int retInt=app.exec();	
+    qDebug() << QString("程序停止");
+    
+    return retInt;
+}
+
+void myMessageHandler(QtMsgType type, const QMessageLogContext &, const QString & msg)
+{
+    //const char * msg = str;//.toStdString().c_str();
+    QString txt;
+    QString TimeStr=QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    switch (type) {
+    case QtDebugMsg:
+        txt = QString("%2: Debug: %1").arg(msg).arg(TimeStr);
+        break;
+    case QtWarningMsg:
+        txt = QString("%2: Warning: %1").arg(msg).arg(TimeStr);
+        break;
+    case QtCriticalMsg:
+        txt = QString("%2: Critical: %1").arg(msg).arg(TimeStr);
+        break;
+    case QtFatalMsg:
+        txt = QString("%2: Fatal: %1").arg(msg).arg(TimeStr);
+        abort();
+    }
+    QString outFileStr(bmMainWin::workDir);
+    outFileStr.append(QString("/log"));    
+    QFile outFile(outFileStr);
+    outFile.open(QIODevice::WriteOnly | QIODevice::Append);
+    QTextStream ts(&outFile);
+    //ts.setEncoding(QStringConverter::Utf8);
+    ts << txt << Qt::endl;
+    outFile.close();
 }

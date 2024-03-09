@@ -66,26 +66,30 @@ bmMainWin::bmMainWin(QWidget *parent)
         */
 }
 void bmMainWin::logInfo(const QString &s){
-    statusBar()->showMessage(s);
+    statusBar()->showMessage(s);    
+    qDebug() << s;
 }
 void bmMainWin::logbmData(const QString &bmID, const int Breathe, const int HeartRate){
     //此处加列表，以处理不同设备ID号？？
     if(bds == nullptr){
     	statusBar()->showMessage(QString("设备 %1 已连接").arg(bmID));
+        qDebug() << QString("设备 %1 已连接").arg(bmID);
         bds=new bmDataShow(bmID, mainWidget);
         vbox->addWidget(bds,1);  
-        connect( bds, &bmDataShow::askFullScreen, this, &bmMainWin::showFull );         
+        connect( bds, &bmDataShow::askFullScreen, this, &bmMainWin::showFull );    
+        bmStartStatus(started);     
     }
-    else{
-    	statusBar()->showMessage(QString("已连接"));
-    }
+    //else{
+    //	statusBar()->showMessage(QString("已连接"));
+    //    qDebug() << QString("已连接");
+    //}
     
-    bmStartStatus(started);
+    //bmStartStatus(started);
 
     bds->addBmData(Breathe, HeartRate);
 }
 void bmMainWin::bmStop(){
-    	statusBar()->showMessage(QString("已断开"));
+    statusBar()->showMessage(QString("已断开"));
     bmStartStatus(stopped);
 }
 
@@ -122,11 +126,13 @@ void bmMainWin::bmStartStatus(startBmStatus targetStatus){
     	startBm->setIcon(QIcon(":/Start.png"));   		
 	startBm->setEnabled(true);
 	startBm->setText(QString("开始"));
+    	qDebug() << QString("连接已断开");
     }
     else if(targetStatus==started){    	
     	startBm->setIcon(QIcon(":/Stop.png"));   		
 	startBm->setEnabled(true);
 	startBm->setText(QString("停止"));
+    	qDebug() << QString("已连接");
     }
     else if(targetStatus==loading_open){
         //动画不成功
@@ -139,6 +145,7 @@ void bmMainWin::bmStartStatus(startBmStatus targetStatus){
         startBm->setIcon(QIcon(":/Loading.png"));    		
 	startBm->setEnabled(false);  
 	startBm->setText(QString("正在启动……"));
+    	qDebug() << QString("开始连接……");
 	
     	bm = new bmReader(this);
         connect( bm, &bmReader::serialPortErro, this, &bmMainWin::logInfo );
@@ -155,6 +162,7 @@ void bmMainWin::bmStartStatus(startBmStatus targetStatus){
         startBm->setIcon(QIcon(":/Loading.png"));    		
 	startBm->setEnabled(false);  
 	startBm->setText(QString("正在停止……"));
+    	qDebug() << QString("开始关闭连接……");
     }
     m_startBmStatus=targetStatus; 
 }
