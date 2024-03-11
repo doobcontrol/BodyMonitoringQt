@@ -34,11 +34,16 @@ void bmReader::run() {
     
     serial.setDataTerminalReady(true);
     serial.clear();
+    QByteArray readBytes;
     
     QThread::sleep(1); 
     while(!this->isInterruptionRequested()){
  	serial.waitForReadyRead(); //must
-    	QByteArray readBytes=serial.readAll();//read(16);
+ 	if(serial.bytesAvailable()<16){
+ 	    continue;
+ 	}
+ 	readBytes.clear();
+    	readBytes=serial.readAll();
    	
 	if(!readBytes.isEmpty()){	
 	    if(checkPkgValid(readBytes)){
@@ -49,14 +54,17 @@ void bmReader::run() {
 		);
 	    }
 	    else{
+	    	//emit serialPortErro(QString("设备识别中……(%1)").arg(readBytes.toHex(':')));
 	    	emit serialPortErro(QString("设备识别中……"));
+	    	//重新连接。解决断开后常常保持一直（设备识别中……）状态的问题。很可能是设备需要复位。而重新连接起到了此作用
+	    	serial.close();
+	    	serial.open(QIODevice::ReadWrite);
 	    }
 	}
 	else{
 	    emit serialPortErro(QString("接收失败：%1").arg(serial.errorString()));
 	    break;
-	}
-	//QThread::sleep(1);  
+	} 
     }
    
     serial.close();
