@@ -13,6 +13,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QtGlobal>
+#include <QProcess>
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &, const QString & str);
 
@@ -45,6 +46,56 @@ int main(int argc, char *argv[]) {
     }
     else{    
         qDebug() << QString("加载汉化文件失败");
+    }
+    
+    //串口权限检查
+    QString uName = qgetenv("USER");
+    qDebug() << QString("uName：%1").arg(uName);
+    QStringList arguments;
+    arguments << uName;
+    
+    QProcess process;
+    process.start("groups", arguments);
+    process.waitForFinished(-1); // will wait forever until finished
+    QString stdout = process.readAllStandardOutput().trimmed();
+    QString stderr = process.readAllStandardError().trimmed();
+    qDebug() << QString("串口检查：%1").arg(stdout);
+    qDebug() << QString("串口检查错误：%1").arg(stderr);
+    
+    QStringList uGList=stdout.split(" ");
+    if(!uGList.contains("dialout")){
+        arguments.clear();
+        arguments << "gpasswd";
+        arguments << "--add";
+        arguments << uName;
+        arguments << "dialout";
+        process.start("pkexec", arguments);
+        process.waitForFinished(-1); // will wait forever until finished
+        
+        stdout = process.readAllStandardOutput().trimmed();
+        stderr = process.readAllStandardError().trimmed();
+        
+        qDebug() << QString("串口操作成功：%1").arg(stdout);
+        qDebug() << QString("串口操作错误：%1").arg(stderr);
+    
+        if(stderr.isEmpty()){
+           qDebug() << QString("已为当前用户增加串口操作权限。系统将重启以使此操作生效！");
+           
+           //重新登陆确认
+           QMessageBox::StandardButton retButton = QMessageBox::question(nullptr, 
+               QString("重启系统"), 
+               QString("已为当前用户增加串口操作权限。重启系统后才生效。\n现在重启系统?\n(若不立即重启系统，请稍后重启)"), 
+               QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No), 
+               QMessageBox::NoButton);
+           if(retButton==QMessageBox::Yes){
+	       process.start("reboot");
+	       process.waitForFinished(-1); // will wait forever until finished
+           }    
+        }
+        else{
+           qDebug() << QString("为当前用户增加串口操作权限失败。程序已中止！失败原因：%1").arg(stderr);
+        }
+        return 0;
     }
     
     dbHelper::initXyBaseModelList.append(ConfigPars::get());
