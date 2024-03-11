@@ -1,0 +1,45 @@
+#!/bin/bash
+
+#dialout组里是否有当前用户
+rUser=${SUDO_USER:-$USER}
+uGroups=($(groups $rUser))
+finddialout=0
+for i in ${uGroups[@]}
+do
+  if [[ $i == dialout ]]
+  then
+    finddialout=1 
+    echo user aready in dialout
+  fi
+done
+
+#add user to dialout
+if [[ $finddialout == 0 ]]
+then
+  gpasswd --add $rUser dialout  
+
+  pkill -9 -u $rUser
+
+<<COMMENTS  
+function logout() {
+    local USERNAME
+    export USERNAMES=( ) 
+    while [ -n "$1" ]; do case "$1" in
+        -* ) break ;;
+        *) USERNAMES+=( "$1" ); shift ;;
+    esac; done
+
+    for USERNAME in "${USERNAMES[@]}"; do
+        local SESSION_PID=$(pgrep -fu "$USERNAME" gnome-session|head -1)
+        if [ -n "$SESSION_PID" ]; then
+            (
+                sudo -u "$USERNAME" cat "/proc/$SESSION_PID/environ" | xargs -0 -n 1 echo export
+                echo "gnome-session-quit --logout $@"
+            ) | sudo -u "$USERNAME" sh -;
+        fi
+    done
+}  
+  
+  logout $rUser
+COMMENTS
+fi
