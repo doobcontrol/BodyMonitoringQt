@@ -26,7 +26,8 @@ public:
     };  Q_DECLARE_FLAGS(startBmStatus, BmStatusType)
 private:
     bmReader *bm = nullptr; //指针不赋此初值导致 bm != 0 总是为true
-    bmDataShow *bds = nullptr;
+    //bmDataShow *bds = nullptr;
+    QMap<QString, bmDataShow *> bmIDShowMap;
     QVBoxLayout *vbox;
     QWidget *mainWidget;
     startBmStatus m_startBmStatus=stopped;

@@ -71,20 +71,25 @@ void bmMainWin::logInfo(const QString &s){
 }
 void bmMainWin::logbmData(const QString &bmID, const int Breathe, const int HeartRate){
     //此处加列表，以处理不同设备ID号？？
-    if(bds == nullptr){
+    bmDataShow *bds = nullptr;
+    if(bmIDShowMap.contains(bmID)){
+        bds=bmIDShowMap[bmID];
+        if(m_startBmStatus!=started){
+            statusBar()->showMessage(QString("设备 %1 已连接").arg(bmID));
+            qDebug() << QString("设备 %1 已连接").arg(bmID);
+            bmStartStatus(started); 
+        }
+    }
+    else{
     	statusBar()->showMessage(QString("设备 %1 已连接").arg(bmID));
         qDebug() << QString("设备 %1 已连接").arg(bmID);
         bds=new bmDataShow(bmID, mainWidget);
         vbox->addWidget(bds,1);  
         connect( bds, &bmDataShow::askFullScreen, this, &bmMainWin::showFull );    
-        bmStartStatus(started);     
+        bmStartStatus(started);    
+        
+        bmIDShowMap[bmID]=bds;
     }
-    //else{
-    //	statusBar()->showMessage(QString("已连接"));
-    //    qDebug() << QString("已连接");
-    //}
-    
-    //bmStartStatus(started);
 
     bds->addBmData(Breathe, HeartRate);
 }
