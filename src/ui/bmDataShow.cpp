@@ -311,4 +311,10 @@ void bmDataShow::stopAlert(){
     }   
     alertLabel->hide();
 }
+void bmDataShow::stop(){
+    stopAlert();
+    if(inRecord){
+        recordData();
+    }
+}
 

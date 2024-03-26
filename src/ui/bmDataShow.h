@@ -41,6 +41,7 @@ public:
     bmDataShow(QString bmID, QWidget *parent = nullptr);
     void addBmData(const int Breathe, const int HeartRate);
     bool eventFilter(QObject *watched, QEvent *event);
+    void stop();
 public slots:
     void showFull();
     void recordData();

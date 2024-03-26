@@ -26,7 +26,6 @@ public:
     };  Q_DECLARE_FLAGS(startBmStatus, BmStatusType)
 private:
     bmReader *bm = nullptr; //指针不赋此初值导致 bm != 0 总是为true
-    //bmDataShow *bds = nullptr;
     QMap<QString, bmDataShow *> bmIDShowMap;
     QVBoxLayout *vbox;
     QWidget *mainWidget;
@@ -34,6 +33,7 @@ private:
     QAction *startBm;
     void bmStartStatus(startBmStatus targetStatus);
     QToolBar *toolbar;
+    void stopAllShow();
 public slots:
     void logInfo(const QString &s);
     void logbmData(const QString &bmID, const int Breathe, const int HeartRate);

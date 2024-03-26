@@ -8,6 +8,7 @@
 #include "frmAlertSet.h"
 #include "frmBmRecordList.h"
 #include <QDebug>
+#include <QMapIterator>
 
 QString bmMainWin::workDir="";
 QString bmMainWin::dataDir="";
@@ -132,6 +133,7 @@ void bmMainWin::bmStartStatus(startBmStatus targetStatus){
 	startBm->setEnabled(true);
 	startBm->setText(QString("开始"));
     	qDebug() << QString("连接已断开");
+    	stopAllShow();
     }
     else if(targetStatus==started){    	
     	startBm->setIcon(QIcon(":/Stop.png"));   		
@@ -204,6 +206,13 @@ void bmMainWin::showFull(const bmDataShow* askBm, const bool isFull){
         setWindowFlags(Qt::Window);
         show();
         setWindowState(Qt::WindowNoState);
+    }
+}
+void bmMainWin::stopAllShow(){
+    QMapIterator<QString, bmDataShow *> i(bmIDShowMap);
+    while (i.hasNext()) {
+        i.next();
+        i.value()->stop();
     }
 }
 
