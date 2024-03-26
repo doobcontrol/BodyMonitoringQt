@@ -7,7 +7,7 @@
 #include <QChartView>
 #include <QLabel>
 #include <QGroupBox>
-#include <QSoundEffect>
+#include <QMediaPlayer>
 #include <QMovie>
 
 class bmDataShow : public QWidget  {
@@ -35,7 +35,7 @@ class bmDataShow : public QWidget  {
     QMap<QString, QString>* monitorRoom=nullptr;
     QMap<QString, QString>* monitorPerson=nullptr;
     QMovie *movie=nullptr;
-    QSoundEffect *sound=nullptr;
+    QMediaPlayer *sound=nullptr;
     QString recordID;
 public:
     bmDataShow(QString bmID, QWidget *parent = nullptr);

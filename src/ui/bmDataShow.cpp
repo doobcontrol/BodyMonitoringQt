@@ -9,6 +9,7 @@
 #include "bmRecord.h"
 #include "bmRecordItem.h"
 #include <QFileDialog>
+#include <QAudioOutput>
 
 bmDataShow::bmDataShow(QString bmID, QWidget *parent)
     : QWidget(parent) {
@@ -286,13 +287,19 @@ void bmDataShow::startAlert(){
         movie->setScaledSize(QSize(w,h));
         alertLabel->setMovie (movie);
         
-        sound=new QSoundEffect(this);
-        sound->setSource(QUrl::fromLocalFile(":/alerm.wav"));
-        sound->setLoopCount(QSoundEffect::Infinite);
+        sound=new QMediaPlayer(this);
+        sound->setSource(QUrl("qrc:/alerm.wav"));
+        sound->setLoops(QMediaPlayer::Infinite); 
+        
+        QAudioOutput* audioOutput = new QAudioOutput;
+        sound->setAudioOutput(audioOutput);
+        audioOutput->setVolume(100);
     }
     
-    movie->start();   
+    movie->start();  
+    
     sound->play(); 
+    
     alertLabel->show();       
 }
 void bmDataShow::stopAlert(){
